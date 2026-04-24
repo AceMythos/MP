@@ -7,7 +7,13 @@ from app.config import get_settings
 from app.db import check_database, get_db, init_database
 from app.ingestion import create_rule_alerts, normalize_row, parse_csv_bytes
 from app.models import Alert, Event, IngestionJob
-from app.schemas import AlertResponse, EventResponse, HealthResponse, IngestionResponse
+from app.schemas import (
+    AlertResponse,
+    EventResponse,
+    HealthResponse,
+    IngestionResponse,
+    UserRiskSummary,
+)
 
 
 settings = get_settings()
@@ -109,3 +115,57 @@ def list_alerts(
         )
         for alert in alerts
     ]
+
+
+@app.get("/risk/users", response_model=list[UserRiskSummary])
+def list_user_risks(
+    limit: int = Query(default=100, ge=1, le=1000),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+) -> list[UserRiskSummary]:
+    severity_rank = {"low": 1, "medium": 2, "high": 3, "critical": 4}
+    summaries: dict[str, UserRiskSummary] = {}
+
+    events = (
+        db.query(Event)
+        .order_by(Event.account.asc().nulls_last(), Event.occurred_at.desc().nulls_last(), Event.id.desc())
+        .all()
+    )
+
+    for event in events:
+        account = event.account or "unknown"
+        summary = summaries.get(account)
+        if summary is None:
+            summary = UserRiskSummary(
+                account=account,
+                event_count=0,
+                alert_count=0,
+                max_risk_score=0,
+                max_severity="low",
+                last_seen_at=event.occurred_at,
+            )
+            summaries[account] = summary
+
+        summary.event_count += 1
+        if event.occurred_at and (summary.last_seen_at is None or event.occurred_at > summary.last_seen_at):
+            summary.last_seen_at = event.occurred_at
+
+        for alert in event.alerts:
+            summary.alert_count += 1
+            if alert.risk_score > summary.max_risk_score:
+                summary.max_risk_score = alert.risk_score
+            if severity_rank[alert.severity] > severity_rank[summary.max_severity]:
+                summary.max_severity = alert.severity
+
+    ranked = sorted(
+        summaries.values(),
+        key=lambda summary: (
+            summary.max_risk_score,
+            severity_rank[summary.max_severity],
+            summary.alert_count,
+            summary.event_count,
+            summary.account,
+        ),
+        reverse=True,
+    )
+    return ranked[offset : offset + limit]

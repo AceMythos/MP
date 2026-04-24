@@ -49,3 +49,12 @@ class AlertResponse(BaseModel):
     reason_codes: list[str]
     created_at: datetime
     event: EventResponse
+
+
+class UserRiskSummary(BaseModel):
+    account: str
+    event_count: int
+    alert_count: int
+    max_risk_score: int
+    max_severity: str
+    last_seen_at: datetime | None
