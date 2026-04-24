@@ -81,7 +81,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L1",
       "id": "backend_app_models_py",
-      "community": 1,
+      "community": 2,
       "norm_label": "models.py"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L7",
       "id": "models_base",
-      "community": 1,
+      "community": 2,
       "norm_label": "base"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "",
       "source_location": "",
       "id": "declarativebase",
-      "community": 1,
+      "community": 2,
       "norm_label": "declarativebase"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L11",
       "id": "models_ingestionjob",
-      "community": 1,
+      "community": 2,
       "norm_label": "ingestionjob"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L24",
       "id": "models_event",
-      "community": 1,
+      "community": 2,
       "norm_label": "event"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L47",
       "id": "models_alert",
-      "community": 1,
+      "community": 2,
       "norm_label": "alert"
     },
     {
@@ -193,6 +193,15 @@
       "norm_label": "userrisksummary"
     },
     {
+      "label": "DashboardOverview",
+      "file_type": "code",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L63",
+      "id": "schemas_dashboardoverview",
+      "community": 0,
+      "norm_label": "dashboardoverview"
+    },
+    {
       "label": "db.py",
       "file_type": "code",
       "source_file": "backend/app/db.py",
@@ -243,53 +252,62 @@
       "source_file": "backend/app/main.py",
       "source_location": "L1",
       "id": "backend_app_main_py",
-      "community": 2,
+      "community": 1,
       "norm_label": "main.py"
     },
     {
       "label": "healthcheck()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "id": "main_healthcheck",
-      "community": 2,
+      "community": 1,
       "norm_label": "healthcheck()"
     },
     {
       "label": "ingest_csv()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "id": "main_ingest_csv",
-      "community": 2,
+      "community": 1,
       "norm_label": "ingest_csv()"
     },
     {
       "label": "list_events()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L77",
+      "source_location": "L78",
       "id": "main_list_events",
-      "community": 2,
+      "community": 1,
       "norm_label": "list_events()"
     },
     {
       "label": "list_alerts()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L92",
+      "source_location": "L93",
       "id": "main_list_alerts",
-      "community": 2,
+      "community": 1,
       "norm_label": "list_alerts()"
     },
     {
       "label": "list_user_risks()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L121",
+      "source_location": "L122",
       "id": "main_list_user_risks",
-      "community": 2,
+      "community": 1,
       "norm_label": "list_user_risks()"
+    },
+    {
+      "label": "dashboard_overview()",
+      "file_type": "code",
+      "source_file": "backend/app/main.py",
+      "source_location": "L176",
+      "id": "main_dashboard_overview",
+      "community": 1,
+      "norm_label": "dashboard_overview()"
     },
     {
       "label": "conftest.py",
@@ -313,7 +331,7 @@
       "label": "test_csv_ingestion_and_event_listing()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L9",
+      "source_location": "L16",
       "id": "test_health_test_csv_ingestion_and_event_listing",
       "community": 3,
       "norm_label": "test_csv_ingestion_and_event_listing()"
@@ -322,7 +340,7 @@
       "label": "test_rule_engine_flags_new_ip_for_established_account()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L37",
+      "source_location": "L44",
       "id": "test_health_test_rule_engine_flags_new_ip_for_established_account",
       "community": 3,
       "norm_label": "test_rule_engine_flags_new_ip_for_established_account()"
@@ -331,16 +349,25 @@
       "label": "test_user_risk_summary_ranks_accounts_by_alert_score()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L66",
+      "source_location": "L73",
       "id": "test_health_test_user_risk_summary_ranks_accounts_by_alert_score",
       "community": 3,
       "norm_label": "test_user_risk_summary_ranks_accounts_by_alert_score()"
     },
     {
+      "label": "test_dashboard_overview_returns_security_summary_counts()",
+      "file_type": "code",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L104",
+      "id": "test_health_test_dashboard_overview_returns_security_summary_counts",
+      "community": 3,
+      "norm_label": "test_dashboard_overview_returns_security_summary_counts()"
+    },
+    {
       "label": "test_healthcheck()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L97",
+      "source_location": "L138",
       "id": "test_health_test_healthcheck",
       "community": 3,
       "norm_label": "test_healthcheck()"
@@ -588,6 +615,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_src": "backend_app_schemas_py",
+      "_tgt": "schemas_dashboardoverview",
+      "source": "backend_app_schemas_py",
+      "target": "schemas_dashboardoverview",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/schemas.py",
@@ -648,6 +687,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_src": "schemas_dashboardoverview",
+      "_tgt": "basemodel",
+      "source": "basemodel",
+      "target": "schemas_dashboardoverview",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
@@ -687,7 +738,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_healthcheck",
@@ -699,7 +750,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_ingest_csv",
@@ -711,7 +762,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_events",
@@ -723,7 +774,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L92",
+      "source_location": "L93",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_alerts",
@@ -735,7 +786,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L121",
+      "source_location": "L122",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_user_risks",
@@ -746,8 +797,20 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_src": "backend_app_main_py",
+      "_tgt": "main_dashboard_overview",
+      "source": "backend_app_main_py",
+      "target": "main_dashboard_overview",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L9",
+      "source_location": "L16",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_csv_ingestion_and_event_listing",
@@ -759,7 +822,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L37",
+      "source_location": "L44",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_rule_engine_flags_new_ip_for_established_account",
@@ -771,7 +834,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L66",
+      "source_location": "L73",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_user_risk_summary_ranks_accounts_by_alert_score",
@@ -783,7 +846,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L97",
+      "source_location": "L104",
+      "weight": 1.0,
+      "_src": "backend_tests_test_health_py",
+      "_tgt": "test_health_test_dashboard_overview_returns_security_summary_counts",
+      "source": "backend_tests_test_health_py",
+      "target": "test_health_test_dashboard_overview_returns_security_summary_counts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L138",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_healthcheck",

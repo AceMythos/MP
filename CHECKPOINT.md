@@ -1,6 +1,6 @@
 # Checkpoint - AI-Based Identity Anomaly Detection System
 
-Date: 2026-04-23
+Date: 2026-04-24
 
 ## What Happened So Far
 
@@ -177,7 +177,9 @@ Important files:
 
 ### Stage 2 - CSV Ingestion
 
-In progress locally. Not pushed yet.
+Completed and pushed on branch:
+
+`stage-1-backend-skeleton`
 
 Dataset source confirmed:
 
@@ -203,19 +205,32 @@ time
 ret   # training file only
 ```
 
-Stage 2 work already added locally:
+Stage 2 work completed:
 
 - SQLAlchemy models for:
   - `IngestionJob`
   - `Event`
+- persisted `Alert` model for rule-based findings
 - CSV parsing and normalization logic in `backend/app/ingestion.py`
 - field mapping from Kaggle schema to internal event schema
 - CSV upload endpoint:
   - `POST /ingestions/csv`
 - event listing endpoint:
   - `GET /events`
+- alert listing endpoint:
+  - `GET /alerts`
+- user risk summary endpoint:
+  - `GET /risk/users`
+- dashboard summary endpoint:
+  - `GET /dashboard/overview`
+- rule engine for:
+  - outside-standard-hours activity
+  - sensitive/internal URL targets
+  - new source IP for established accounts
+  - unusual port for account
+  - unusual VLAN for account
 - schema models for API responses
-- Stage 2 test extension in `backend/tests/test_health.py`
+- backend tests covering ingestion, alerts, user summaries, and dashboard overview
 
 Stage 2 files touched:
 
@@ -226,14 +241,44 @@ Stage 2 files touched:
 - `backend/app/main.py`
 - `backend/tests/test_health.py`
 - `backend/requirements.txt`
+- `graphify-out/GRAPH_REPORT.md`
+- `graphify-out/graph.json`
 
-### Important Note
+### Git Status
 
-Remote GitHub has **not** been updated with Stage 2 yet.
+Remote branch pushed:
 
-Current work is still local on branch:
+`origin/stage-1-backend-skeleton`
 
-`stage-1-backend-skeleton`
+Pushed commits:
+
+- `f4d6d97` `feat: bootstrap backend ingestion and alerts`
+- `dff1712` `feat: add user risk summaries`
+
+Current local work to be pushed next:
+
+- dashboard overview endpoint
+- updated tests
+- refreshed graphify output
+
+### Current Backend State
+
+Verified locally:
+
+- `.venv/bin/pytest backend` -> `5 passed`
+- SQLite-backed ingestion works through direct endpoint invocation in tests
+- `GET /health`
+- `POST /ingestions/csv`
+- `GET /events`
+- `GET /alerts`
+- `GET /risk/users`
+- `GET /dashboard/overview`
+
+### Next Recommended Step
+
+Start Stage 4:
+
+`feature engineering -> Isolation Forest baseline -> ML anomaly score -> combine with rule score`
 
 ## Resume Instructions
 
@@ -248,7 +293,7 @@ source .venv/bin/activate
 2. Run tests:
 
 ```bash
-pytest backend
+.venv/bin/pytest backend
 ```
 
 3. If needed, install any missing dependency from:
@@ -257,7 +302,20 @@ pytest backend
 backend/requirements.txt
 ```
 
-4. Verify Stage 2 endpoints:
+4. Verify current endpoints:
+
+```bash
+GET /health
+POST /ingestions/csv
+GET /events
+GET /alerts
+GET /risk/users
+GET /dashboard/overview
+```
+
+5. Push the current local dashboard overview commit if it has not been pushed yet.
+
+6. Continue with Stage 4 ML baseline work.
 
 - `POST /ingestions/csv`
 - `GET /events`

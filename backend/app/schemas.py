@@ -58,3 +58,12 @@ class UserRiskSummary(BaseModel):
     max_risk_score: int
     max_severity: str
     last_seen_at: datetime | None
+
+
+class DashboardOverview(BaseModel):
+    total_events: int
+    total_alerts: int
+    total_accounts: int
+    high_alerts: int
+    critical_alerts: int
+    severity_breakdown: dict[str, int]

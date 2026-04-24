@@ -1,11 +1,11 @@
 # Graph Report - .  (2026-04-24)
 
 ## Corpus Check
-- 9 files · ~5,009 words
+- 9 files · ~5,139 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 38 nodes · 37 edges · 9 communities detected
+- 41 nodes · 41 edges · 9 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -38,19 +38,19 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.48
-Nodes (6): BaseModel, AlertResponse, EventResponse, HealthResponse, IngestionResponse, UserRiskSummary
+Cohesion: 0.43
+Nodes (7): BaseModel, AlertResponse, DashboardOverview, EventResponse, HealthResponse, IngestionResponse, UserRiskSummary
 
 ### Community 1 - "Community 1"
+Cohesion: 0.29
+Nodes (0): 
+
+### Community 2 - "Community 2"
 Cohesion: 0.53
 Nodes (5): DeclarativeBase, Alert, Base, Event, IngestionJob
 
-### Community 2 - "Community 2"
-Cohesion: 0.33
-Nodes (0): 
-
 ### Community 3 - "Community 3"
-Cohesion: 0.4
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 4 - "Community 4"

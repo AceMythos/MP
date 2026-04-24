@@ -2,7 +2,14 @@ from io import BytesIO
 
 from app.db import SessionLocal, engine, init_database
 from app.models import Alert, Base, Event
-from app.main import healthcheck, ingest_csv, list_alerts, list_events, list_user_risks
+from app.main import (
+    dashboard_overview,
+    healthcheck,
+    ingest_csv,
+    list_alerts,
+    list_events,
+    list_user_risks,
+)
 from fastapi import UploadFile
 
 
@@ -90,6 +97,40 @@ def test_user_risk_summary_ranks_accounts_by_alert_score() -> None:
         assert summaries[1].account == "low@example.com"
         assert summaries[1].alert_count == 0
         assert summaries[1].max_risk_score == 0
+    finally:
+        db.close()
+
+
+def test_dashboard_overview_returns_security_summary_counts() -> None:
+    Base.metadata.drop_all(bind=engine)
+    init_database()
+
+    sample_csv = (
+        "id,account,group,IP,url,port,vlan,switchIP,time,ret\n"
+        "1,quiet@example.com,engineering,192.168.1.10,http://example.com,443,700,10.0.0.1,2021/6/16 10:30,0.1149\n"
+        "2,risky@example.com,engineering,192.168.1.10,http://internal.example.com,443,700,10.0.0.1,2021/6/17 23:35,0.1149\n"
+        "3,risky@example.com,engineering,192.168.1.10,http://example.com,443,700,10.0.0.1,2021/6/18 08:40,0.1149\n"
+        "4,risky@example.com,engineering,192.168.1.10,http://example.com,443,700,10.0.0.1,2021/6/19 08:45,0.1149\n"
+        "5,risky@example.com,engineering,10.20.30.40,http://internal.example.com,8443,999,10.0.0.2,2021/6/20 23:15,0.1149\n"
+    )
+
+    db = SessionLocal()
+    try:
+        upload = UploadFile(filename="sample.csv", file=BytesIO(sample_csv.encode("utf-8")))
+        ingest_csv(file=upload, db=db)
+
+        overview = dashboard_overview(db=db)
+        assert overview.total_events == 5
+        assert overview.total_alerts == 2
+        assert overview.total_accounts == 2
+        assert overview.high_alerts == 1
+        assert overview.critical_alerts == 0
+        assert overview.severity_breakdown == {
+            "low": 0,
+            "medium": 1,
+            "high": 1,
+            "critical": 0,
+        }
     finally:
         db.close()
 

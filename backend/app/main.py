@@ -9,6 +9,7 @@ from app.ingestion import create_rule_alerts, normalize_row, parse_csv_bytes
 from app.models import Alert, Event, IngestionJob
 from app.schemas import (
     AlertResponse,
+    DashboardOverview,
     EventResponse,
     HealthResponse,
     IngestionResponse,
@@ -169,3 +170,21 @@ def list_user_risks(
         reverse=True,
     )
     return ranked[offset : offset + limit]
+
+
+@app.get("/dashboard/overview", response_model=DashboardOverview)
+def dashboard_overview(db: Session = Depends(get_db)) -> DashboardOverview:
+    alerts = db.query(Alert).all()
+    severity_breakdown = {"low": 0, "medium": 0, "high": 0, "critical": 0}
+
+    for alert in alerts:
+        severity_breakdown[alert.severity] = severity_breakdown.get(alert.severity, 0) + 1
+
+    return DashboardOverview(
+        total_events=db.query(Event).count(),
+        total_alerts=len(alerts),
+        total_accounts=db.query(Event.account).filter(Event.account.is_not(None)).distinct().count(),
+        high_alerts=severity_breakdown["high"],
+        critical_alerts=severity_breakdown["critical"],
+        severity_breakdown=severity_breakdown,
+    )
