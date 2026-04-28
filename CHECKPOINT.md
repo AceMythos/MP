@@ -482,3 +482,55 @@ Target endpoints to cover through real request flow:
 Next milestone:
 
 `Stage 5 frontend skeleton (React + Vite + Tailwind + SOC-style route scaffold + backend health integration)`
+
+---
+
+## Checkpoint - 2026-04-28 (Frontend UX + Integration Milestone)
+
+### What Was Completed
+
+- Built and iterated Stage 5 frontend in `frontend/` with SOC-style shell and core screens.
+- Added polished UI/UX upgrades:
+  - improved typography and composition
+  - dashboard hero rail and severity modules
+  - refined cards/tables/drawer interactions
+  - ghostty-like mono-forward visual language for data/headers
+- Added local login gate flow in frontend:
+  - demo credentials: `admin / admin123`
+- Added practical analyst controls:
+  - Alerts: severity chips + search filter
+  - Events: search filter
+- Confirmed frontend-backend data wiring for:
+  - `/health`
+  - `/dashboard/overview`
+  - `/alerts`
+  - `/events`
+  - `/risk/users`
+  - `/ingestions/csv`
+- Fixed browser CORS issue by adding FastAPI CORS middleware for:
+  - `http://localhost:5173`
+  - `http://127.0.0.1:5173`
+
+### Files Updated In This Phase
+
+- `frontend/src/App.tsx`
+- `frontend/src/index.css`
+- `backend/app/main.py` (CORS middleware)
+- `graphify-out/GRAPH_REPORT.md`
+- `graphify-out/graph.json`
+
+### GitHub Status
+
+- Frontend scaffold and UX milestone commits pushed on:
+  - `cd2949c`
+  - `668a37c`
+- Branch:
+  - `stage-1-backend-skeleton`
+
+### Current Resume Point
+
+Immediate next implementation:
+
+1. Add in-UI `Run ML Detection` action button (calls `POST /detections/isolation-forest`).
+2. Split app into route-based pages/components (`react-router`) for maintainability.
+3. Perform tighter Stitch parity pass per screen with refined motion and density.
