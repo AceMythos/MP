@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 
 type TabKey = 'dashboard' | 'upload' | 'alerts' | 'events' | 'users'
 
@@ -52,6 +52,10 @@ const TABS: Array<{ key: TabKey; label: string }> = [
 ]
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [username, setUsername] = useState('admin')
+  const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
   const [activeTab, setActiveTab] = useState<TabKey>('dashboard')
   const [health, setHealth] = useState<'loading' | 'ok' | 'down'>('loading')
   const [overview, setOverview] = useState<DashboardOverview | null>(null)
@@ -61,6 +65,9 @@ function App() {
   const [uploadStatus, setUploadStatus] = useState<string>('No file uploaded yet.')
   const [uploading, setUploading] = useState(false)
   const [selectedAlert, setSelectedAlert] = useState<AlertRow | null>(null)
+  const [alertSeverityFilter, setAlertSeverityFilter] = useState<'all' | AlertRow['severity']>('all')
+  const [alertQuery, setAlertQuery] = useState('')
+  const [eventQuery, setEventQuery] = useState('')
 
   useEffect(() => {
     void fetchHealth()
@@ -116,6 +123,69 @@ function App() {
 
   const topUsers = useMemo(() => users.slice(0, 5), [users])
   const recentAlerts = useMemo(() => alerts.slice(0, 6), [alerts])
+  const severity = overview?.severity_breakdown ?? { low: 0, medium: 0, high: 0, critical: 0 }
+  const filteredAlerts = useMemo(() => {
+    return alerts
+      .filter((a) => (alertSeverityFilter === 'all' ? true : a.severity === alertSeverityFilter))
+      .filter((a) => {
+        if (!alertQuery.trim()) return true
+        const q = alertQuery.toLowerCase()
+        return (
+          a.rule_name.toLowerCase().includes(q) ||
+          (a.event.account ?? '').toLowerCase().includes(q) ||
+          (a.event.source_ip ?? '').toLowerCase().includes(q) ||
+          a.reason_codes.join(' ').toLowerCase().includes(q)
+        )
+      })
+  }, [alerts, alertSeverityFilter, alertQuery])
+
+  const filteredEvents = useMemo(() => {
+    return events.filter((e) => {
+      if (!eventQuery.trim()) return true
+      const q = eventQuery.toLowerCase()
+      return (
+        (e.account ?? '').toLowerCase().includes(q) ||
+        (e.group_name ?? '').toLowerCase().includes(q) ||
+        (e.source_ip ?? '').toLowerCase().includes(q) ||
+        (e.url ?? '').toLowerCase().includes(q) ||
+        (e.vlan ?? '').toLowerCase().includes(q)
+      )
+    })
+  }, [events, eventQuery])
+
+  function onLoginSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (username === 'admin' && password === 'admin123') {
+      setLoginError('')
+      setLoggedIn(true)
+      return
+    }
+    setLoginError('Invalid local admin credentials.')
+  }
+
+  if (!loggedIn) {
+    return (
+      <div className="login-page">
+        <div className="login-card reveal">
+          <p className="hero-kicker">AEGIS SOC ACCESS</p>
+          <h1>Secure Operator Portal</h1>
+          <p className="login-hint">Local admin mode for v1. Default demo: admin / admin123</p>
+          <form onSubmit={onLoginSubmit}>
+            <label>
+              Username
+              <input value={username} onChange={(e) => setUsername(e.target.value)} />
+            </label>
+            <label>
+              Password
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </label>
+            {loginError && <div className="login-error">{loginError}</div>}
+            <button className="login-btn" type="submit">Enter Command Center</button>
+          </form>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="app-shell">
@@ -131,18 +201,33 @@ function App() {
       </aside>
 
       <main className="workspace">
-        <header className="topbar">
+        <div className="ambient-orb ambient-orb-a"></div>
+        <div className="ambient-orb ambient-orb-b"></div>
+        <header className="topbar reveal">
           <div>
             <h1>Sentinel Threat Command</h1>
             <p>Identity and network anomaly monitoring</p>
           </div>
-          <div className={health === 'ok' ? 'health ok' : health === 'down' ? 'health down' : 'health'}>
-            {health === 'ok' ? 'Backend Online' : health === 'down' ? 'Backend Offline' : 'Checking...'}
+          <div className="topbar-actions">
+            <button className="ghost-btn" onClick={() => void refreshData()}>Refresh</button>
+            <div className={health === 'ok' ? 'health ok' : health === 'down' ? 'health down' : 'health'}>
+              {health === 'ok' ? 'Backend Online' : health === 'down' ? 'Backend Offline' : 'Checking...'}
+            </div>
           </div>
         </header>
 
         {activeTab === 'dashboard' && (
-          <section className="panel-grid">
+          <section className="panel-grid reveal">
+            <div className="hero-rail">
+              <div>
+                <p className="hero-kicker">SOC LIVE GRID</p>
+                <h2 className="hero-title">Operational Threat Posture</h2>
+              </div>
+              <div className="hero-meta">
+                <span>Rules + Isolation Forest</span>
+                <span>Local Mode</span>
+              </div>
+            </div>
             <div className="kpi"><span>Total Events</span><strong>{overview?.total_events ?? 0}</strong></div>
             <div className="kpi"><span>Total Alerts</span><strong>{overview?.total_alerts ?? 0}</strong></div>
             <div className="kpi high"><span>High Alerts</span><strong>{overview?.high_alerts ?? 0}</strong></div>
@@ -154,6 +239,15 @@ function App() {
               ))}
             </div>
             <div className="card">
+              <h2>Severity Distribution</h2>
+              <div className="severity-bars">
+                <div><label>Low</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.low}></progress><span>{severity.low}</span></div>
+                <div><label>Medium</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.medium}></progress><span>{severity.medium}</span></div>
+                <div><label>High</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.high}></progress><span>{severity.high}</span></div>
+                <div><label>Critical</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.critical}></progress><span>{severity.critical}</span></div>
+              </div>
+            </div>
+            <div className="card wide">
               <h2>Recent Alerts</h2>
               {recentAlerts.map((a) => (
                 <div key={a.id} className="row"><span>{a.event.account ?? 'unknown'}</span><strong>{a.severity}</strong></div>
@@ -163,7 +257,7 @@ function App() {
         )}
 
         {activeTab === 'upload' && (
-          <section className="card full">
+          <section className="card full reveal">
             <h2>CSV Ingestion</h2>
             <label className="upload-zone">
               <input type="file" accept=".csv" onChange={(e) => e.target.files?.[0] && void onUpload(e.target.files[0])} />
@@ -175,12 +269,33 @@ function App() {
         )}
 
         {activeTab === 'alerts' && (
-          <section className="card full">
-            <h2>Alerts Triage</h2>
+          <section className="card full reveal">
+            <div className="section-head">
+              <h2>Alerts Triage</h2>
+              <div className="chip-group">
+                {(['all', 'critical', 'high', 'medium', 'low'] as const).map((opt) => (
+                  <button
+                    key={opt}
+                    className={alertSeverityFilter === opt ? 'chip active' : 'chip'}
+                    onClick={() => setAlertSeverityFilter(opt)}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="toolbar">
+              <input
+                className="search-input"
+                placeholder="Search account, IP, rule, reason..."
+                value={alertQuery}
+                onChange={(e) => setAlertQuery(e.target.value)}
+              />
+            </div>
             <table>
               <thead><tr><th>Severity</th><th>Risk</th><th>Rule</th><th>Account</th><th>IP</th><th>Time</th></tr></thead>
               <tbody>
-                {alerts.map((a) => (
+                {filteredAlerts.map((a) => (
                   <tr key={a.id} onClick={() => setSelectedAlert(a)}>
                     <td><span className={`badge ${a.severity}`}>{a.severity}</span></td>
                     <td>{a.risk_score}</td>
@@ -196,12 +311,20 @@ function App() {
         )}
 
         {activeTab === 'events' && (
-          <section className="card full">
+          <section className="card full reveal">
             <h2>Raw Event Explorer</h2>
+            <div className="toolbar">
+              <input
+                className="search-input"
+                placeholder="Search account, group, IP, URL, VLAN..."
+                value={eventQuery}
+                onChange={(e) => setEventQuery(e.target.value)}
+              />
+            </div>
             <table>
               <thead><tr><th>Account</th><th>Group</th><th>IP</th><th>URL</th><th>Port</th><th>VLAN</th></tr></thead>
               <tbody>
-                {events.map((e) => (
+                {filteredEvents.map((e) => (
                   <tr key={e.id}>
                     <td>{e.account ?? 'unknown'}</td><td>{e.group_name ?? '-'}</td><td>{e.source_ip ?? '-'}</td><td>{e.url ?? '-'}</td><td>{e.port ?? '-'}</td><td>{e.vlan ?? '-'}</td>
                   </tr>
@@ -212,7 +335,7 @@ function App() {
         )}
 
         {activeTab === 'users' && (
-          <section className="card full">
+          <section className="card full reveal">
             <h2>User Risk Ranking</h2>
             <table>
               <thead><tr><th>Account</th><th>Events</th><th>Alerts</th><th>Max Risk</th><th>Severity</th></tr></thead>
@@ -229,7 +352,7 @@ function App() {
       </main>
 
       {selectedAlert && (
-        <aside className="drawer">
+        <aside className="drawer reveal">
           <button className="close" onClick={() => setSelectedAlert(null)}>Close</button>
           <h3>Alert #{selectedAlert.id}</h3>
           <p><strong>Rule:</strong> {selectedAlert.rule_name}</p>
