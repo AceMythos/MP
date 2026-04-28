@@ -437,3 +437,48 @@ Target endpoints to cover through real request flow:
    - temporarily revert tests to direct function-level tests for local progress.
 3. After test stability is confirmed, continue Stage 4:
    - `feature engineering -> Isolation Forest baseline -> ML anomaly score -> combine with rule score`
+
+---
+
+## Checkpoint - 2026-04-28 (Stage 4 Milestone)
+
+### What Was Completed
+
+- Added Isolation Forest ML baseline pipeline.
+- Added persisted ML fields on events:
+  - `ml_anomaly_score`
+  - `ml_is_anomaly`
+- Added DB compatibility migration for SQLite `events` table ML columns.
+- Added ML detection endpoint:
+  - `POST /detections/isolation-forest`
+- Added combined risk scoring (`combined_risk_v1`) that fuses:
+  - max rule score
+  - ML score (normalized)
+  - anomaly bonus when ML marks anomaly
+- Added explainable reason codes on combined alerts, including inherited rule reason codes.
+- Added/updated backend tests to cover ML detection and idempotency behavior.
+- Rebuilt Graphify after code changes.
+
+### Files Updated
+
+- `backend/app/ml.py` (new)
+- `backend/app/main.py`
+- `backend/app/models.py`
+- `backend/app/schemas.py`
+- `backend/app/db.py`
+- `backend/requirements.txt`
+- `backend/tests/test_health.py`
+- `graphify-out/GRAPH_REPORT.md`
+- `graphify-out/graph.json`
+
+### GitHub Status
+
+- Commit pushed: `c805e6b`
+- Branch: `stage-1-backend-skeleton`
+- Remote: `origin/stage-1-backend-skeleton`
+
+### Current Resume Point
+
+Next milestone:
+
+`Stage 5 frontend skeleton (React + Vite + Tailwind + SOC-style route scaffold + backend health integration)`
