@@ -9,7 +9,7 @@
       "source_file": "backend/app/config.py",
       "source_location": "L1",
       "id": "backend_app_config_py",
-      "community": 6,
+      "community": 7,
       "norm_label": "config.py"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "backend/app/config.py",
       "source_location": "L6",
       "id": "config_settings",
-      "community": 6,
+      "community": 7,
       "norm_label": "settings"
     },
     {
@@ -27,7 +27,7 @@
       "source_file": "",
       "source_location": "",
       "id": "basesettings",
-      "community": 6,
+      "community": 7,
       "norm_label": "basesettings"
     },
     {
@@ -36,7 +36,7 @@
       "source_file": "backend/app/config.py",
       "source_location": "L19",
       "id": "config_get_settings",
-      "community": 6,
+      "community": 7,
       "norm_label": "get_settings()"
     },
     {
@@ -243,7 +243,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L1",
       "id": "backend_app_ml_py",
-      "community": 7,
+      "community": 8,
       "norm_label": "ml.py"
     },
     {
@@ -252,7 +252,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L11",
       "id": "ml_run_isolation_forest_detection",
-      "community": 7,
+      "community": 8,
       "norm_label": "run_isolation_forest_detection()"
     },
     {
@@ -261,7 +261,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L107",
       "id": "ml_create_combined_risk_alerts",
-      "community": 7,
+      "community": 8,
       "norm_label": "_create_combined_risk_alerts()"
     },
     {
@@ -270,7 +270,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L159",
       "id": "ml_score_to_severity",
-      "community": 7,
+      "community": 8,
       "norm_label": "_score_to_severity()"
     },
     {
@@ -333,7 +333,7 @@
       "source_file": "backend/app/__init__.py",
       "source_location": "L1",
       "id": "backend_app_init_py",
-      "community": 9,
+      "community": 10,
       "norm_label": "__init__.py"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L1",
       "id": "backend_tests_conftest_py",
-      "community": 8,
+      "community": 9,
       "norm_label": "conftest.py"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L17",
       "id": "conftest_reset_database",
-      "community": 8,
+      "community": 9,
       "norm_label": "reset_database()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L23",
       "id": "conftest_client",
-      "community": 8,
+      "community": 9,
       "norm_label": "client()"
     },
     {
@@ -533,6 +533,69 @@
       "id": "test_health_test_isolation_forest_detection_is_idempotent_for_alert_creation",
       "community": 0,
       "norm_label": "test_isolation_forest_detection_is_idempotent_for_alert_creation()"
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "frontend/vite.config.ts",
+      "source_location": "L1",
+      "id": "frontend_vite_config_ts",
+      "community": 11,
+      "norm_label": "vite.config.ts"
+    },
+    {
+      "label": "eslint.config.js",
+      "file_type": "code",
+      "source_file": "frontend/eslint.config.js",
+      "source_location": "L1",
+      "id": "frontend_eslint_config_js",
+      "community": 12,
+      "norm_label": "eslint.config.js"
+    },
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_app_tsx",
+      "community": 6,
+      "norm_label": "app.tsx"
+    },
+    {
+      "label": "fetchHealth()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L70",
+      "id": "app_fetchhealth",
+      "community": 6,
+      "norm_label": "fetchhealth()"
+    },
+    {
+      "label": "refreshData()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L79",
+      "id": "app_refreshdata",
+      "community": 6,
+      "norm_label": "refreshdata()"
+    },
+    {
+      "label": "onUpload()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L96",
+      "id": "app_onupload",
+      "community": 6,
+      "norm_label": "onupload()"
+    },
+    {
+      "label": "main.tsx",
+      "file_type": "code",
+      "source_file": "frontend/src/main.tsx",
+      "source_location": "L1",
+      "id": "frontend_src_main_tsx",
+      "community": 6,
+      "norm_label": "main.tsx"
     }
   ],
   "links": [
@@ -1422,6 +1485,66 @@
       "_tgt": "test_health_upload_csv",
       "source": "test_health_upload_csv",
       "target": "test_health_test_isolation_forest_detection_is_idempotent_for_alert_creation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_src": "frontend_src_app_tsx",
+      "_tgt": "app_fetchhealth",
+      "source": "frontend_src_app_tsx",
+      "target": "app_fetchhealth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_src": "frontend_src_app_tsx",
+      "_tgt": "app_refreshdata",
+      "source": "frontend_src_app_tsx",
+      "target": "app_refreshdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_src": "frontend_src_app_tsx",
+      "_tgt": "app_onupload",
+      "source": "frontend_src_app_tsx",
+      "target": "app_onupload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/main.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_src": "frontend_src_main_tsx",
+      "_tgt": "frontend_src_app_tsx",
+      "source": "frontend_src_app_tsx",
+      "target": "frontend_src_main_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L108",
+      "weight": 1.0,
+      "_src": "app_onupload",
+      "_tgt": "app_refreshdata",
+      "source": "app_refreshdata",
+      "target": "app_onupload",
       "confidence_score": 1.0
     }
   ],

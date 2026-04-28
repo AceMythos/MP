@@ -1,11 +1,11 @@
 # Graph Report - .  (2026-04-28)
 
 ## Corpus Check
-- 10 files · ~6,947 words
+- 14 files · ~72,064 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 59 nodes · 74 edges · 10 communities detected
+- 66 nodes · 79 edges · 13 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -20,6 +20,9 @@
 - [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 8|Community 8]]
 - [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `_upload_csv()` - 9 edges
@@ -63,23 +66,39 @@ Cohesion: 0.47
 Nodes (3): _ensure_sqlite_event_ml_columns(), _ensure_sqlite_ingestion_error_message_column(), init_database()
 
 ### Community 6 - "Community 6"
+Cohesion: 0.5
+Nodes (2): onUpload(), refreshData()
+
+### Community 7 - "Community 7"
 Cohesion: 0.67
 Nodes (3): BaseSettings, get_settings(), Settings
 
-### Community 7 - "Community 7"
+### Community 8 - "Community 8"
 Cohesion: 0.83
 Nodes (3): _create_combined_risk_alerts(), run_isolation_forest_detection(), _score_to_severity()
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 9 - "Community 9"
+### Community 10 - "Community 10"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 11 - "Community 11"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 12 - "Community 12"
 Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Community 9`** (1 nodes): `__init__.py`
+- **Thin community `Community 10`** (1 nodes): `__init__.py`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 11`** (1 nodes): `vite.config.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 12`** (1 nodes): `eslint.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
