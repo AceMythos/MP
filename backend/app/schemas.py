@@ -16,6 +16,7 @@ class IngestionResponse(BaseModel):
     records_total: int
     source_kind: str
     status: str
+    error_message: str | None = None
 
 
 class EventResponse(BaseModel):
@@ -34,6 +35,8 @@ class EventResponse(BaseModel):
     switch_ip: str | None
     occurred_at: datetime | None
     expected_risk: float | None
+    ml_anomaly_score: float | None
+    ml_is_anomaly: int | None
     raw_payload: str
     created_at: datetime
 
@@ -67,3 +70,10 @@ class DashboardOverview(BaseModel):
     high_alerts: int
     critical_alerts: int
     severity_breakdown: dict[str, int]
+
+
+class MlDetectionResponse(BaseModel):
+    processed_events: int
+    anomaly_events: int
+    alerts_created: int
+    combined_alerts_created: int

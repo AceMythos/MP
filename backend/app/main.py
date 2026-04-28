@@ -1,11 +1,12 @@
 import json
 
-from fastapi import Depends, FastAPI, File, Query, UploadFile
+from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.db import check_database, get_db, init_database
 from app.ingestion import create_rule_alerts, normalize_row, parse_csv_bytes
+from app.ml import run_isolation_forest_detection
 from app.models import Alert, Event, IngestionJob
 from app.schemas import (
     AlertResponse,
@@ -13,6 +14,7 @@ from app.schemas import (
     EventResponse,
     HealthResponse,
     IngestionResponse,
+    MlDetectionResponse,
     UserRiskSummary,
 )
 
@@ -38,32 +40,48 @@ def ingest_csv(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ) -> IngestionResponse:
-    payload = file.file.read()
-    rows = parse_csv_bytes(payload)
-
     ingestion = IngestionJob(
         filename=file.filename or "upload.csv",
         source_kind="csv_upload",
-        records_total=len(rows),
-        status="completed",
+        records_total=0,
+        status="processing",
     )
     db.add(ingestion)
-    db.flush()
-
-    normalized_events: list[Event] = []
-    for row in rows:
-        event = normalize_row(row, ingestion.id)
-        db.add(event)
-        normalized_events.append(event)
-
-    db.flush()
-
-    for event in normalized_events:
-        for alert in create_rule_alerts(db, event):
-            db.add(alert)
-
     db.commit()
     db.refresh(ingestion)
+    try:
+        payload = file.file.read()
+        rows = parse_csv_bytes(payload)
+        ingestion.records_total = len(rows)
+
+        for row_number, row in enumerate(rows, start=2):
+            event = normalize_row(row, ingestion.id, row_number=row_number)
+            db.add(event)
+            db.flush()
+
+            for alert in create_rule_alerts(db, event):
+                db.add(alert)
+
+        ingestion.status = "completed"
+        ingestion.error_message = None
+        db.commit()
+        db.refresh(ingestion)
+    except ValueError as exc:
+        db.rollback()
+        failed_ingestion = db.get(IngestionJob, ingestion.id)
+        if failed_ingestion is not None:
+            failed_ingestion.status = "failed"
+            failed_ingestion.error_message = str(exc)
+            db.commit()
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        db.rollback()
+        failed_ingestion = db.get(IngestionJob, ingestion.id)
+        if failed_ingestion is not None:
+            failed_ingestion.status = "failed"
+            failed_ingestion.error_message = str(exc)
+            db.commit()
+        raise HTTPException(status_code=500, detail="Failed to process CSV ingestion.") from exc
 
     return IngestionResponse(
         ingestion_id=ingestion.id,
@@ -71,6 +89,7 @@ def ingest_csv(
         records_total=ingestion.records_total,
         source_kind=ingestion.source_kind,
         status=ingestion.status,
+        error_message=ingestion.error_message,
     )
 
 
@@ -187,4 +206,15 @@ def dashboard_overview(db: Session = Depends(get_db)) -> DashboardOverview:
         high_alerts=severity_breakdown["high"],
         critical_alerts=severity_breakdown["critical"],
         severity_breakdown=severity_breakdown,
+    )
+
+
+@app.post("/detections/isolation-forest", response_model=MlDetectionResponse)
+def run_ml_detection(db: Session = Depends(get_db)) -> MlDetectionResponse:
+    processed_events, anomaly_events, alerts_created, combined_alerts_created = run_isolation_forest_detection(db=db)
+    return MlDetectionResponse(
+        processed_events=processed_events,
+        anomaly_events=anomaly_events,
+        alerts_created=alerts_created,
+        combined_alerts_created=combined_alerts_created,
     )

@@ -5,3 +5,5 @@ sqlalchemy==2.0.40
 pytest==8.3.5
 httpx==0.28.1
 python-multipart==0.0.20
+pandas==2.2.3
+scikit-learn==1.6.1

@@ -16,6 +16,7 @@ class IngestionJob(Base):
     source_kind: Mapped[str] = mapped_column(String(50), default="csv_upload")
     records_total: Mapped[int] = mapped_column(Integer, default=0)
     status: Mapped[str] = mapped_column(String(50), default="completed")
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     events: Mapped[list["Event"]] = relationship(back_populates="ingestion")
@@ -37,6 +38,8 @@ class Event(Base):
     switch_ip: Mapped[str | None] = mapped_column(String(64), nullable=True)
     occurred_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     expected_risk: Mapped[float | None] = mapped_column(Float, nullable=True)
+    ml_anomaly_score: Mapped[float | None] = mapped_column(Float, nullable=True)
+    ml_is_anomaly: Mapped[int | None] = mapped_column(Integer, nullable=True)
     raw_payload: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 

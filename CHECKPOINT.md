@@ -332,3 +332,108 @@ GET /dashboard/overview
 ## Immediate Next Goal
 
 Finish verifying Stage 2 against the real dataset archive, then commit and push before starting Stage 3.
+
+---
+
+## Checkpoint - 2026-04-25 (Session Stop)
+
+### What Was Completed This Session
+
+- Implemented ingestion hardening for `POST /ingestions/csv`.
+- Added ingestion lifecycle states:
+  - `processing`
+  - `completed`
+  - `failed`
+- Added persisted ingestion error field:
+  - `IngestionJob.error_message`
+- Added CSV validation guards:
+  - reject empty CSV payload
+  - reject missing header row
+  - reject missing required columns
+- Added explicit row-level parsing errors for:
+  - `port` (int)
+  - `ret` (float)
+  - `time` (datetime format)
+- Fixed rule engine look-ahead bias:
+  - account baseline now uses only historical events (`Event.id < current_event.id`)
+- Added tests for failed ingestions:
+  - invalid `port` handling
+  - missing required columns handling
+- Rebuilt graphify index after code changes.
+
+### Files Updated
+
+- `backend/app/models.py`
+- `backend/app/db.py`
+- `backend/app/ingestion.py`
+- `backend/app/main.py`
+- `backend/app/schemas.py`
+- `backend/tests/test_health.py`
+- `graphify-out/GRAPH_REPORT.md`
+- `graphify-out/graph.json`
+
+### Validation Status
+
+- `python3 -m compileall backend/app backend/tests` passed.
+- `pytest backend/tests/test_health.py -q` could not run in current shell due to missing local dependency:
+  - `ModuleNotFoundError: No module named 'sqlalchemy'`
+
+### Exact Resume Point
+
+Next milestone on resume:
+
+`Step 2: convert tests from direct route-function calls to FastAPI TestClient API tests`
+
+Target endpoints to cover through real request flow:
+
+- `GET /health`
+- `POST /ingestions/csv` (success + failure cases)
+- `GET /events`
+- `GET /alerts`
+- `GET /risk/users`
+- `GET /dashboard/overview`
+
+---
+
+## Checkpoint - 2026-04-25 (Bookmark: Stop Here)
+
+### What Was Completed
+
+- Converted backend tests from direct route-function invocation to API-style tests using FastAPI `TestClient`.
+- Added shared pytest fixtures in `backend/tests/conftest.py`:
+  - autouse DB reset fixture (`drop_all` + `init_database`)
+  - `client` fixture for HTTP endpoint tests
+- Rewrote `backend/tests/test_health.py` to validate real request flow for:
+  - `GET /health`
+  - `POST /ingestions/csv` (multipart upload)
+  - `GET /events`
+  - `GET /alerts`
+  - `GET /risk/users`
+  - `GET /dashboard/overview`
+  - ingestion failure cases (invalid `port`, missing required columns)
+- Rebuilt graphify index after updates.
+
+### Current Validation Status
+
+- API test conversion is complete.
+- In this Codex sandbox, `TestClient` requests hang (deadlock at first request), so pytest cannot complete here.
+- Timeout check used:
+  - `timeout 20 .venv/bin/pytest backend/tests/test_health.py -q` -> `EXIT:124`
+
+### Files Updated In This Bookmark
+
+- `backend/tests/conftest.py`
+- `backend/tests/test_health.py`
+- `CHECKPOINT.md`
+- `graphify-out/GRAPH_REPORT.md`
+- `graphify-out/graph.json`
+
+### Resume Instructions
+
+1. Run tests in your normal local shell/environment:
+   - `.venv/bin/pytest backend -q`
+2. If TestClient still hangs, either:
+   - install/use a compatible async backend stack in your environment, or
+   - temporarily revert tests to direct function-level tests for local progress.
+3. After test stability is confirmed, continue Stage 4:
+   - `feature engineering -> Isolation Forest baseline -> ML anomaly score -> combine with rule score`

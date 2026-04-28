@@ -23,14 +23,26 @@ DATASET_FIELD_MAP = {
     "ret": "expected_risk",
 }
 
+REQUIRED_CSV_FIELDS = {"id", "account", "group", "IP", "url", "port", "vlan", "switchIP", "time"}
+
 
 def parse_csv_bytes(payload: bytes) -> list[dict[str, str]]:
+    if not payload.strip():
+        raise ValueError("CSV file is empty.")
+
     decoded = payload.decode("utf-8-sig", errors="replace")
     reader = csv.DictReader(io.StringIO(decoded))
+    if reader.fieldnames is None:
+        raise ValueError("CSV header row is missing.")
+
+    missing_fields = sorted(REQUIRED_CSV_FIELDS.difference(set(reader.fieldnames)))
+    if missing_fields:
+        raise ValueError(f"CSV is missing required columns: {', '.join(missing_fields)}")
+
     return [dict(row) for row in reader]
 
 
-def normalize_row(row: dict[str, str], ingestion_id: int) -> Event:
+def normalize_row(row: dict[str, str], ingestion_id: int, row_number: int) -> Event:
     normalized: dict[str, object] = {
         "ingestion_id": ingestion_id,
         "source_type": "ueba_csv",
@@ -42,14 +54,16 @@ def normalize_row(row: dict[str, str], ingestion_id: int) -> Event:
         if value is None or value == "":
             continue
 
+        cleaned_value = value.strip() if isinstance(value, str) else value
+
         if target_field == "port":
-            normalized[target_field] = int(value)
+            normalized[target_field] = _parse_int(cleaned_value, "port", row_number)
         elif target_field == "occurred_at":
-            normalized[target_field] = datetime.strptime(value, "%Y/%m/%d %H:%M")
+            normalized[target_field] = _parse_datetime(cleaned_value, "time", row_number)
         elif target_field == "expected_risk":
-            normalized[target_field] = float(value)
+            normalized[target_field] = _parse_float(cleaned_value, "ret", row_number)
         else:
-            normalized[target_field] = value
+            normalized[target_field] = cleaned_value
 
     return Event(**normalized)
 
@@ -81,7 +95,7 @@ def create_rule_alerts(db: Session, event: Event) -> list[Alert]:
     if event.account:
         prior_events = (
             db.query(Event)
-            .filter(Event.account == event.account, Event.id != event.id)
+            .filter(Event.account == event.account, Event.id < event.id)
             .all()
         )
 
@@ -122,3 +136,36 @@ def create_rule_alerts(db: Session, event: Event) -> list[Alert]:
             reason_codes=json.dumps(reason_codes, ensure_ascii=True),
         )
     ]
+
+
+def _parse_int(value: object, field_name: str, row_number: int) -> int:
+    try:
+        return int(str(value))
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"Invalid integer value for '{field_name}' at CSV row {row_number}: {value!r}"
+        ) from exc
+
+
+def _parse_float(value: object, field_name: str, row_number: int) -> float:
+    try:
+        return float(str(value))
+    except (TypeError, ValueError) as exc:
+        raise ValueError(
+            f"Invalid float value for '{field_name}' at CSV row {row_number}: {value!r}"
+        ) from exc
+
+
+def _parse_datetime(value: object, field_name: str, row_number: int) -> datetime:
+    if not isinstance(value, str):
+        raise ValueError(
+            f"Invalid datetime value for '{field_name}' at CSV row {row_number}: {value!r}"
+        )
+
+    try:
+        return datetime.strptime(value, "%Y/%m/%d %H:%M")
+    except ValueError as exc:
+        raise ValueError(
+            f"Invalid datetime value for '{field_name}' at CSV row {row_number}: {value!r}. "
+            "Expected format: YYYY/M/D HH:MM"
+        ) from exc

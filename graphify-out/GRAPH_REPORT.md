@@ -1,11 +1,11 @@
-# Graph Report - .  (2026-04-24)
+# Graph Report - .  (2026-04-28)
 
 ## Corpus Check
-- 9 files · ~5,139 words
+- 10 files · ~6,925 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 41 nodes · 41 edges · 9 communities detected
+- 59 nodes · 74 edges · 10 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -19,18 +19,19 @@
 - [[_COMMUNITY_Community 6|Community 6]]
 - [[_COMMUNITY_Community 7|Community 7]]
 - [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Base` - 5 edges
-2. `Settings` - 3 edges
-3. `get_settings()` - 2 edges
-4. `IngestionJob` - 2 edges
-5. `Event` - 2 edges
-6. `Alert` - 2 edges
-7. `HealthResponse` - 2 edges
-8. `IngestionResponse` - 2 edges
-9. `EventResponse` - 2 edges
-10. `AlertResponse` - 2 edges
+1. `_upload_csv()` - 9 edges
+2. `Base` - 5 edges
+3. `normalize_row()` - 4 edges
+4. `Settings` - 3 edges
+5. `_create_combined_risk_alerts()` - 3 edges
+6. `init_database()` - 3 edges
+7. `get_settings()` - 2 edges
+8. `_parse_int()` - 2 edges
+9. `_parse_float()` - 2 edges
+10. `_parse_datetime()` - 2 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -38,45 +39,47 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.43
-Nodes (7): BaseModel, AlertResponse, DashboardOverview, EventResponse, HealthResponse, IngestionResponse, UserRiskSummary
+Cohesion: 0.33
+Nodes (9): test_csv_ingestion_and_event_listing(), test_csv_ingestion_marks_job_failed_for_invalid_port(), test_csv_ingestion_rejects_missing_required_columns(), test_dashboard_overview_returns_security_summary_counts(), test_isolation_forest_detection_is_idempotent_for_alert_creation(), test_isolation_forest_detection_scores_events_and_creates_ml_alerts(), test_rule_engine_flags_new_ip_for_established_account(), test_user_risk_summary_ranks_accounts_by_alert_score() (+1 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.29
-Nodes (0): 
+Cohesion: 0.39
+Nodes (8): BaseModel, AlertResponse, DashboardOverview, EventResponse, HealthResponse, IngestionResponse, MlDetectionResponse, UserRiskSummary
 
 ### Community 2 - "Community 2"
+Cohesion: 0.25
+Nodes (0): 
+
+### Community 3 - "Community 3"
+Cohesion: 0.43
+Nodes (4): normalize_row(), _parse_datetime(), _parse_float(), _parse_int()
+
+### Community 4 - "Community 4"
 Cohesion: 0.53
 Nodes (5): DeclarativeBase, Alert, Base, Event, IngestionJob
 
-### Community 3 - "Community 3"
-Cohesion: 0.33
-Nodes (0): 
+### Community 5 - "Community 5"
+Cohesion: 0.47
+Nodes (3): _ensure_sqlite_event_ml_columns(), _ensure_sqlite_ingestion_error_message_column(), init_database()
 
-### Community 4 - "Community 4"
+### Community 6 - "Community 6"
 Cohesion: 0.67
 Nodes (3): BaseSettings, get_settings(), Settings
 
-### Community 5 - "Community 5"
-Cohesion: 0.5
-Nodes (0): 
-
-### Community 6 - "Community 6"
-Cohesion: 0.5
-Nodes (0): 
-
 ### Community 7 - "Community 7"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.83
+Nodes (3): _create_combined_risk_alerts(), run_isolation_forest_detection(), _score_to_severity()
 
 ### Community 8 - "Community 8"
+Cohesion: 0.67
+Nodes (0): 
+
+### Community 9 - "Community 9"
 Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Community 7`** (1 nodes): `__init__.py`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 8`** (1 nodes): `conftest.py`
+- **Thin community `Community 9`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
