@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 
-type TabKey = 'dashboard' | 'upload' | 'alerts' | 'events' | 'users'
+type TabKey = 'dashboard' | 'upload' | 'alerts' | 'events' | 'users' | 'audit'
 
 type DashboardOverview = {
   total_events: number
@@ -42,6 +42,14 @@ type UserRisk = {
   last_seen_at: string | null
 }
 
+type AuditLogRow = {
+  id: number
+  admin_username: string
+  action: string
+  details: string | null
+  created_at: string
+}
+
 const API_BASE = 'http://127.0.0.1:8000'
 const TABS: Array<{ key: TabKey; label: string }> = [
   { key: 'dashboard', label: 'Dashboard' },
@@ -49,10 +57,11 @@ const TABS: Array<{ key: TabKey; label: string }> = [
   { key: 'alerts', label: 'Alerts' },
   { key: 'events', label: 'Events' },
   { key: 'users', label: 'Users' },
+  { key: 'audit', label: 'Audit' },
 ]
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
   const [username, setUsername] = useState('admin')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
@@ -62,7 +71,10 @@ function App() {
   const [alerts, setAlerts] = useState<AlertRow[]>([])
   const [events, setEvents] = useState<EventRow[]>([])
   const [users, setUsers] = useState<UserRisk[]>([])
+  const [auditLogs, setAuditLogs] = useState<AuditLogRow[]>([])
   const [uploadStatus, setUploadStatus] = useState<string>('No file uploaded yet.')
+  const [syntheticCount, setSyntheticCount] = useState(300)
+  const [syntheticSeed, setSyntheticSeed] = useState('')
   const [uploading, setUploading] = useState(false)
   const [selectedAlert, setSelectedAlert] = useState<AlertRow | null>(null)
   const [alertSeverityFilter, setAlertSeverityFilter] = useState<'all' | AlertRow['severity']>('all')
@@ -71,8 +83,14 @@ function App() {
 
   useEffect(() => {
     void fetchHealth()
-    void refreshData()
-  }, [])
+    if (token) {
+      void refreshData(token)
+    }
+  }, [token])
+
+  function getAuthHeaders(accessToken: string): Record<string, string> {
+    return { Authorization: `Bearer ${accessToken}` }
+  }
 
   async function fetchHealth() {
     try {
@@ -83,39 +101,83 @@ function App() {
     }
   }
 
-  async function refreshData() {
+  async function refreshData(accessToken: string) {
     try {
-      const [overviewRes, alertsRes, eventsRes, usersRes] = await Promise.all([
-        fetch(`${API_BASE}/dashboard/overview`),
-        fetch(`${API_BASE}/alerts?limit=20`),
-        fetch(`${API_BASE}/events?limit=20`),
-        fetch(`${API_BASE}/risk/users?limit=20`),
+      const headers = getAuthHeaders(accessToken)
+      const [overviewRes, alertsRes, eventsRes, usersRes, auditRes] = await Promise.all([
+        fetch(`${API_BASE}/dashboard/overview`, { headers }),
+        fetch(`${API_BASE}/alerts?limit=20`, { headers }),
+        fetch(`${API_BASE}/events?limit=20`, { headers }),
+        fetch(`${API_BASE}/risk/users?limit=20`, { headers }),
+        fetch(`${API_BASE}/admin/audit-logs?limit=30`, { headers }),
       ])
+      if ([overviewRes, alertsRes, eventsRes, usersRes, auditRes].some((res) => res.status === 401)) {
+        setToken(null)
+        setLoginError('Session expired. Please log in again.')
+        return
+      }
       if (overviewRes.ok) setOverview((await overviewRes.json()) as DashboardOverview)
       if (alertsRes.ok) setAlerts((await alertsRes.json()) as AlertRow[])
       if (eventsRes.ok) setEvents((await eventsRes.json()) as EventRow[])
       if (usersRes.ok) setUsers((await usersRes.json()) as UserRisk[])
+      if (auditRes.ok) setAuditLogs((await auditRes.json()) as AuditLogRow[])
     } catch {
       // keep current state
     }
   }
 
   async function onUpload(file: File) {
+    if (!token) {
+      setUploadStatus('Upload failed: not authenticated.')
+      return
+    }
     setUploading(true)
     setUploadStatus(`Uploading ${file.name}...`)
     try {
       const formData = new FormData()
       formData.append('file', file)
-      const res = await fetch(`${API_BASE}/ingestions/csv`, { method: 'POST', body: formData })
+      const res = await fetch(`${API_BASE}/ingestions/csv`, {
+        method: 'POST',
+        body: formData,
+        headers: getAuthHeaders(token),
+      })
       const body = await res.json()
       if (!res.ok) {
         setUploadStatus(`Upload failed: ${body.detail || 'Unknown error'}`)
       } else {
         setUploadStatus(`Ingestion completed. Records: ${body.records_total}`)
-        await refreshData()
+        await refreshData(token)
       }
     } catch {
       setUploadStatus('Upload failed: backend unavailable.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  async function onGenerateSynthetic() {
+    if (!token) {
+      setUploadStatus('Synthetic generation failed: not authenticated.')
+      return
+    }
+    setUploading(true)
+    setUploadStatus(`Generating ${syntheticCount} synthetic events...`)
+    try {
+      const query = new URLSearchParams({ count: String(syntheticCount) })
+      if (syntheticSeed.trim()) query.set('seed', syntheticSeed.trim())
+      const res = await fetch(`${API_BASE}/ingestions/synthetic?${query.toString()}`, {
+        method: 'POST',
+        headers: getAuthHeaders(token),
+      })
+      const body = await res.json()
+      if (!res.ok) {
+        setUploadStatus(`Synthetic generation failed: ${body.detail || 'Unknown error'}`)
+      } else {
+        setUploadStatus(`Synthetic ingestion completed. Records: ${body.records_total}`)
+        await refreshData(token)
+      }
+    } catch {
+      setUploadStatus('Synthetic generation failed: backend unavailable.')
     } finally {
       setUploading(false)
     }
@@ -153,23 +215,34 @@ function App() {
     })
   }, [events, eventQuery])
 
-  function onLoginSubmit(e: FormEvent) {
+  async function onLoginSubmit(e: FormEvent) {
     e.preventDefault()
-    if (username === 'admin' && password === 'admin123') {
-      setLoginError('')
-      setLoggedIn(true)
-      return
+    setLoginError('')
+    try {
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      })
+      const body = await response.json()
+      if (!response.ok) {
+        setLoginError(body.detail || 'Invalid local admin credentials.')
+        return
+      }
+      setToken(body.access_token as string)
+      setPassword('')
+    } catch {
+      setLoginError('Backend unavailable.')
     }
-    setLoginError('Invalid local admin credentials.')
   }
 
-  if (!loggedIn) {
+  if (!token) {
     return (
       <div className="login-page">
         <div className="login-card reveal">
           <p className="hero-kicker">AEGIS SOC ACCESS</p>
           <h1>Secure Operator Portal</h1>
-          <p className="login-hint">Local admin mode for v1. Default demo: admin / admin123</p>
+          <p className="login-hint">Local admin mode for v1. Use your backend admin credentials.</p>
           <form onSubmit={onLoginSubmit}>
             <label>
               Username
@@ -189,16 +262,35 @@ function App() {
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="brand">AEGIS SOC</div>
-        <nav>
-          {TABS.map((tab) => (
-            <button key={tab.key} className={activeTab === tab.key ? 'nav-btn active' : 'nav-btn'} onClick={() => setActiveTab(tab.key)}>
-              {tab.label}
-            </button>
-          ))}
+      <header className="globalbar">
+        <div className="global-brand">AEGIS SOC</div>
+        <nav className="global-nav">
+          <button className="global-link">Search</button>
+          <button className="global-link">Analytics</button>
+          <button className="global-link">Reports</button>
+          <button className="global-link">Alerts</button>
+          <button className="global-link">Dashboards</button>
         </nav>
-      </aside>
+        <div className="global-tools">
+          <button className="ghost-btn" onClick={() => token && void refreshData(token)}>Refresh</button>
+          <button
+            className="ghost-btn"
+            onClick={() => {
+              setToken(null)
+              setAlerts([])
+              setEvents([])
+              setUsers([])
+              setAuditLogs([])
+              setOverview(null)
+            }}
+          >
+            Logout
+          </button>
+          <div className={health === 'ok' ? 'health ok' : health === 'down' ? 'health down' : 'health'}>
+            {health === 'ok' ? 'Backend Online' : health === 'down' ? 'Backend Offline' : 'Checking...'}
+          </div>
+        </div>
+      </header>
 
       <main className="workspace">
         <div className="ambient-orb ambient-orb-a"></div>
@@ -208,13 +300,15 @@ function App() {
             <h1>Sentinel Threat Command</h1>
             <p>Identity and network anomaly monitoring</p>
           </div>
-          <div className="topbar-actions">
-            <button className="ghost-btn" onClick={() => void refreshData()}>Refresh</button>
-            <div className={health === 'ok' ? 'health ok' : health === 'down' ? 'health down' : 'health'}>
-              {health === 'ok' ? 'Backend Online' : health === 'down' ? 'Backend Offline' : 'Checking...'}
-            </div>
-          </div>
+          <div className="topbar-actions"></div>
         </header>
+        <nav className="section-tabs reveal">
+          {TABS.map((tab) => (
+            <button key={tab.key} className={activeTab === tab.key ? 'nav-btn active' : 'nav-btn'} onClick={() => setActiveTab(tab.key)}>
+              {tab.label}
+            </button>
+          ))}
+        </nav>
 
         {activeTab === 'dashboard' && (
           <section className="panel-grid reveal">
@@ -232,13 +326,7 @@ function App() {
             <div className="kpi"><span>Total Alerts</span><strong>{overview?.total_alerts ?? 0}</strong></div>
             <div className="kpi high"><span>High Alerts</span><strong>{overview?.high_alerts ?? 0}</strong></div>
             <div className="kpi critical"><span>Critical Alerts</span><strong>{overview?.critical_alerts ?? 0}</strong></div>
-            <div className="card">
-              <h2>Top Risky Users</h2>
-              {topUsers.map((u) => (
-                <div key={u.account} className="row"><span>{u.account}</span><strong>{u.max_risk_score}</strong></div>
-              ))}
-            </div>
-            <div className="card">
+            <div className="card wide">
               <h2>Severity Distribution</h2>
               <div className="severity-bars">
                 <div><label>Low</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.low}></progress><span>{severity.low}</span></div>
@@ -247,7 +335,13 @@ function App() {
                 <div><label>Critical</label><progress max={Math.max(1, overview?.total_alerts ?? 1)} value={severity.critical}></progress><span>{severity.critical}</span></div>
               </div>
             </div>
-            <div className="card wide">
+            <div className="card">
+              <h2>Top Risky Users</h2>
+              {topUsers.map((u) => (
+                <div key={u.account} className="row"><span>{u.account}</span><strong>{u.max_risk_score}</strong></div>
+              ))}
+            </div>
+            <div className="card">
               <h2>Recent Alerts</h2>
               {recentAlerts.map((a) => (
                 <div key={a.id} className="row"><span>{a.event.account ?? 'unknown'}</span><strong>{a.severity}</strong></div>
@@ -265,6 +359,28 @@ function App() {
               <small>Required columns: id, account, group, IP, url, port, vlan, switchIP, time</small>
             </label>
             <p className="status">{uploadStatus}</p>
+            <hr />
+            <h2>Synthetic UEBA Generation</h2>
+            <div className="toolbar synthetic-controls">
+              <input
+                type="number"
+                min={1}
+                max={5000}
+                value={syntheticCount}
+                onChange={(e) => setSyntheticCount(Number(e.target.value) || 1)}
+                className="search-input"
+                placeholder="Event count"
+              />
+              <input
+                value={syntheticSeed}
+                onChange={(e) => setSyntheticSeed(e.target.value)}
+                className="search-input"
+                placeholder="Seed (optional)"
+              />
+              <button className="login-btn" disabled={uploading} onClick={() => void onGenerateSynthetic()}>
+                {uploading ? 'Processing...' : 'Generate Synthetic Events'}
+              </button>
+            </div>
           </section>
         )}
 
@@ -343,6 +459,25 @@ function App() {
                 {users.map((u) => (
                   <tr key={u.account}>
                     <td>{u.account}</td><td>{u.event_count}</td><td>{u.alert_count}</td><td>{u.max_risk_score}</td><td><span className={`badge ${u.max_severity}`}>{u.max_severity}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </section>
+        )}
+
+        {activeTab === 'audit' && (
+          <section className="card full reveal">
+            <h2>Admin Audit Log</h2>
+            <table>
+              <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Details</th></tr></thead>
+              <tbody>
+                {auditLogs.map((log) => (
+                  <tr key={log.id}>
+                    <td>{new Date(log.created_at).toLocaleString()}</td>
+                    <td>{log.admin_username}</td>
+                    <td>{log.action}</td>
+                    <td>{log.details ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>

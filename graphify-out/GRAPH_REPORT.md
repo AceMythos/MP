@@ -1,11 +1,11 @@
-# Graph Report - .  (2026-04-28)
+# Graph Report - .  (2026-05-01)
 
 ## Corpus Check
-- 14 files · ~72,530 words
+- 15 files · ~92,662 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 67 nodes · 80 edges · 13 communities detected
+- 86 nodes · 110 edges · 14 communities detected
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
@@ -23,18 +23,19 @@
 - [[_COMMUNITY_Community 10|Community 10]]
 - [[_COMMUNITY_Community 11|Community 11]]
 - [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `_upload_csv()` - 9 edges
-2. `Base` - 5 edges
+2. `Base` - 7 edges
 3. `normalize_row()` - 4 edges
-4. `Settings` - 3 edges
-5. `_create_combined_risk_alerts()` - 3 edges
-6. `init_database()` - 3 edges
-7. `get_settings()` - 2 edges
-8. `_parse_int()` - 2 edges
-9. `_parse_float()` - 2 edges
-10. `_parse_datetime()` - 2 edges
+4. `init_database()` - 4 edges
+5. `_create_audit_log()` - 4 edges
+6. `Settings` - 3 edges
+7. `_create_combined_risk_alerts()` - 3 edges
+8. `getAuthHeaders()` - 3 edges
+9. `refreshData()` - 3 edges
+10. `onUpload()` - 3 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -42,47 +43,47 @@
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.33
+Cohesion: 0.26
 Nodes (9): test_csv_ingestion_and_event_listing(), test_csv_ingestion_marks_job_failed_for_invalid_port(), test_csv_ingestion_rejects_missing_required_columns(), test_dashboard_overview_returns_security_summary_counts(), test_isolation_forest_detection_is_idempotent_for_alert_creation(), test_isolation_forest_detection_scores_events_and_creates_ml_alerts(), test_rule_engine_flags_new_ip_for_established_account(), test_user_risk_summary_ranks_accounts_by_alert_score() (+1 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.39
-Nodes (8): BaseModel, AlertResponse, DashboardOverview, EventResponse, HealthResponse, IngestionResponse, MlDetectionResponse, UserRiskSummary
+Cohesion: 0.33
+Nodes (10): BaseModel, AlertResponse, DashboardOverview, EventResponse, HealthResponse, IngestionResponse, LoginRequest, LoginResponse (+2 more)
 
 ### Community 2 - "Community 2"
-Cohesion: 0.25
-Nodes (0): 
+Cohesion: 0.24
+Nodes (4): _create_audit_log(), ingest_csv(), login(), run_ml_detection()
 
 ### Community 3 - "Community 3"
 Cohesion: 0.43
-Nodes (4): normalize_row(), _parse_datetime(), _parse_float(), _parse_int()
+Nodes (7): DeclarativeBase, AdminAuditLog, AdminUser, Alert, Base, Event, IngestionJob
 
 ### Community 4 - "Community 4"
-Cohesion: 0.53
-Nodes (5): DeclarativeBase, Alert, Base, Event, IngestionJob
+Cohesion: 0.43
+Nodes (4): normalize_row(), _parse_datetime(), _parse_float(), _parse_int()
 
 ### Community 5 - "Community 5"
-Cohesion: 0.47
-Nodes (3): _ensure_sqlite_event_ml_columns(), _ensure_sqlite_ingestion_error_message_column(), init_database()
+Cohesion: 0.38
+Nodes (4): create_access_token(), _urlsafe_b64(), _urlsafe_b64_decode(), verify_access_token()
 
 ### Community 6 - "Community 6"
-Cohesion: 0.4
-Nodes (2): onUpload(), refreshData()
+Cohesion: 0.43
+Nodes (4): _ensure_default_admin_user(), _ensure_sqlite_event_ml_columns(), _ensure_sqlite_ingestion_error_message_column(), init_database()
 
 ### Community 7 - "Community 7"
+Cohesion: 0.43
+Nodes (3): getAuthHeaders(), onUpload(), refreshData()
+
+### Community 8 - "Community 8"
 Cohesion: 0.67
 Nodes (3): BaseSettings, get_settings(), Settings
 
-### Community 8 - "Community 8"
+### Community 9 - "Community 9"
 Cohesion: 0.83
 Nodes (3): _create_combined_risk_alerts(), run_isolation_forest_detection(), _score_to_severity()
 
-### Community 9 - "Community 9"
-Cohesion: 0.67
-Nodes (0): 
-
 ### Community 10 - "Community 10"
-Cohesion: 1.0
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 11 - "Community 11"
@@ -93,12 +94,16 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 13 - "Community 13"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **Thin community `Community 10`** (1 nodes): `__init__.py`
+- **Thin community `Community 11`** (1 nodes): `__init__.py`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 11`** (1 nodes): `vite.config.ts`
+- **Thin community `Community 12`** (1 nodes): `vite.config.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 12`** (1 nodes): `eslint.config.js`
+- **Thin community `Community 13`** (1 nodes): `eslint.config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions

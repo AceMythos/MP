@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
+from app.auth import hash_password
 from app.config import get_settings
-from app.models import Base
+from app.models import AdminUser, Base
 
 
 settings = get_settings()
@@ -15,6 +16,7 @@ def init_database() -> None:
     Base.metadata.create_all(bind=engine)
     _ensure_sqlite_ingestion_error_message_column()
     _ensure_sqlite_event_ml_columns()
+    _ensure_default_admin_user()
 
 
 def _ensure_sqlite_ingestion_error_message_column() -> None:
@@ -45,6 +47,20 @@ def check_database() -> bool:
     with engine.connect() as connection:
         connection.execute(text("SELECT 1"))
     return True
+
+
+def _ensure_default_admin_user() -> None:
+    with SessionLocal() as db:
+        existing = db.query(AdminUser).filter(AdminUser.username == settings.admin_default_username).first()
+        if existing is not None:
+            return
+        db.add(
+            AdminUser(
+                username=settings.admin_default_username,
+                password_hash=hash_password(settings.admin_default_password),
+            )
+        )
+        db.commit()
 
 
 def get_db():

@@ -1,23 +1,29 @@
 import json
 
 from fastapi import Depends, FastAPI, File, HTTPException, Query, UploadFile
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
+from app.auth import create_access_token, verify_access_token, verify_password
 from app.config import get_settings
 from app.db import check_database, get_db, init_database
 from app.ingestion import create_rule_alerts, normalize_row, parse_csv_bytes
 from app.ml import run_isolation_forest_detection
-from app.models import Alert, Event, IngestionJob
+from app.models import AdminAuditLog, AdminUser, Alert, Event, IngestionJob
 from app.schemas import (
+    AdminAuditLogResponse,
     AlertResponse,
     DashboardOverview,
     EventResponse,
     HealthResponse,
     IngestionResponse,
+    LoginRequest,
+    LoginResponse,
     MlDetectionResponse,
     UserRiskSummary,
 )
+from app.synthetic import generate_synthetic_events
 
 
 settings = get_settings()
@@ -33,6 +39,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 init_database()
+security = HTTPBearer(auto_error=False)
+
+
+def _create_audit_log(db: Session, admin_username: str, action: str, details: str | None = None) -> None:
+    db.add(AdminAuditLog(admin_username=admin_username, action=action, details=details))
+
+
+def get_current_admin_username(
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+) -> str:
+    if credentials is None or credentials.scheme.lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Authentication required.")
+    username = verify_access_token(credentials.credentials)
+    if username is None:
+        raise HTTPException(status_code=401, detail="Invalid or expired access token.")
+    return username
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -46,10 +68,21 @@ def healthcheck() -> dict[str, str]:
     }
 
 
+@app.post("/auth/login", response_model=LoginResponse)
+def login(payload: LoginRequest, db: Session = Depends(get_db)) -> LoginResponse:
+    admin = db.query(AdminUser).filter(AdminUser.username == payload.username).first()
+    if admin is None or not verify_password(payload.password, admin.password_hash):
+        raise HTTPException(status_code=401, detail="Invalid username or password.")
+    _create_audit_log(db=db, admin_username=admin.username, action="admin_login_success")
+    db.commit()
+    return LoginResponse(access_token=create_access_token(admin.username))
+
+
 @app.post("/ingestions/csv", response_model=IngestionResponse)
 def ingest_csv(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    admin_username: str = Depends(get_current_admin_username),
 ) -> IngestionResponse:
     ingestion = IngestionJob(
         filename=file.filename or "upload.csv",
@@ -75,6 +108,12 @@ def ingest_csv(
 
         ingestion.status = "completed"
         ingestion.error_message = None
+        _create_audit_log(
+            db=db,
+            admin_username=admin_username,
+            action="csv_ingestion_completed",
+            details=f"filename={ingestion.filename} records={ingestion.records_total}",
+        )
         db.commit()
         db.refresh(ingestion)
     except ValueError as exc:
@@ -109,6 +148,7 @@ def list_events(
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
+    _: str = Depends(get_current_admin_username),
 ) -> list[Event]:
     return (
         db.query(Event)
@@ -124,6 +164,7 @@ def list_alerts(
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
+    _: str = Depends(get_current_admin_username),
 ) -> list[AlertResponse]:
     alerts = (
         db.query(Alert)
@@ -153,6 +194,7 @@ def list_user_risks(
     limit: int = Query(default=100, ge=1, le=1000),
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
+    _: str = Depends(get_current_admin_username),
 ) -> list[UserRiskSummary]:
     severity_rank = {"low": 1, "medium": 2, "high": 3, "critical": 4}
     summaries: dict[str, UserRiskSummary] = {}
@@ -203,7 +245,10 @@ def list_user_risks(
 
 
 @app.get("/dashboard/overview", response_model=DashboardOverview)
-def dashboard_overview(db: Session = Depends(get_db)) -> DashboardOverview:
+def dashboard_overview(
+    db: Session = Depends(get_db),
+    _: str = Depends(get_current_admin_username),
+) -> DashboardOverview:
     alerts = db.query(Alert).all()
     severity_breakdown = {"low": 0, "medium": 0, "high": 0, "critical": 0}
 
@@ -220,9 +265,88 @@ def dashboard_overview(db: Session = Depends(get_db)) -> DashboardOverview:
     )
 
 
+@app.get("/admin/audit-logs", response_model=list[AdminAuditLogResponse])
+def list_admin_audit_logs(
+    limit: int = Query(default=100, ge=1, le=1000),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+    _: str = Depends(get_current_admin_username),
+) -> list[AdminAuditLog]:
+    return (
+        db.query(AdminAuditLog)
+        .order_by(AdminAuditLog.created_at.desc(), AdminAuditLog.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
+
+
+@app.post("/ingestions/synthetic", response_model=IngestionResponse)
+def ingest_synthetic(
+    count: int = Query(default=200, ge=1, le=5000),
+    seed: int | None = Query(default=None),
+    db: Session = Depends(get_db),
+    admin_username: str = Depends(get_current_admin_username),
+) -> IngestionResponse:
+    ingestion = IngestionJob(
+        filename=f"synthetic_{count}.csv",
+        source_kind="synthetic_ueba",
+        records_total=0,
+        status="processing",
+    )
+    db.add(ingestion)
+    db.commit()
+    db.refresh(ingestion)
+
+    try:
+        events = generate_synthetic_events(ingestion_id=ingestion.id, count=count, seed=seed)
+        ingestion.records_total = len(events)
+        for event in events:
+            db.add(event)
+            db.flush()
+            for alert in create_rule_alerts(db, event):
+                db.add(alert)
+        ingestion.status = "completed"
+        _create_audit_log(
+            db=db,
+            admin_username=admin_username,
+            action="synthetic_ingestion_completed",
+            details=f"count={count} seed={seed}",
+        )
+        db.commit()
+        db.refresh(ingestion)
+    except Exception as exc:
+        db.rollback()
+        failed_ingestion = db.get(IngestionJob, ingestion.id)
+        if failed_ingestion is not None:
+            failed_ingestion.status = "failed"
+            failed_ingestion.error_message = str(exc)
+            db.commit()
+        raise HTTPException(status_code=500, detail="Failed to generate synthetic events.") from exc
+
+    return IngestionResponse(
+        ingestion_id=ingestion.id,
+        filename=ingestion.filename,
+        records_total=ingestion.records_total,
+        source_kind=ingestion.source_kind,
+        status=ingestion.status,
+        error_message=ingestion.error_message,
+    )
+
+
 @app.post("/detections/isolation-forest", response_model=MlDetectionResponse)
-def run_ml_detection(db: Session = Depends(get_db)) -> MlDetectionResponse:
+def run_ml_detection(
+    db: Session = Depends(get_db),
+    admin_username: str = Depends(get_current_admin_username),
+) -> MlDetectionResponse:
     processed_events, anomaly_events, alerts_created, combined_alerts_created = run_isolation_forest_detection(db=db)
+    _create_audit_log(
+        db=db,
+        admin_username=admin_username,
+        action="ml_detection_run",
+        details=f"processed={processed_events} anomalies={anomaly_events} ml_alerts={alerts_created}",
+    )
+    db.commit()
     return MlDetectionResponse(
         processed_events=processed_events,
         anomaly_events=anomaly_events,

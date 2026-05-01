@@ -77,3 +77,23 @@ class MlDetectionResponse(BaseModel):
     anomaly_events: int
     alerts_created: int
     combined_alerts_created: int
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class AdminAuditLogResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    admin_username: str
+    action: str
+    details: str | None
+    created_at: datetime

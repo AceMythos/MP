@@ -9,7 +9,7 @@
       "source_file": "backend/app/config.py",
       "source_location": "L1",
       "id": "backend_app_config_py",
-      "community": 7,
+      "community": 8,
       "norm_label": "config.py"
     },
     {
@@ -18,7 +18,7 @@
       "source_file": "backend/app/config.py",
       "source_location": "L6",
       "id": "config_settings",
-      "community": 7,
+      "community": 8,
       "norm_label": "settings"
     },
     {
@@ -27,16 +27,16 @@
       "source_file": "",
       "source_location": "",
       "id": "basesettings",
-      "community": 7,
+      "community": 8,
       "norm_label": "basesettings"
     },
     {
       "label": "get_settings()",
       "file_type": "code",
       "source_file": "backend/app/config.py",
-      "source_location": "L19",
+      "source_location": "L23",
       "id": "config_get_settings",
-      "community": 7,
+      "community": 8,
       "norm_label": "get_settings()"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L1",
       "id": "backend_app_ingestion_py",
-      "community": 3,
+      "community": 4,
       "norm_label": "ingestion.py"
     },
     {
@@ -54,7 +54,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L29",
       "id": "ingestion_parse_csv_bytes",
-      "community": 3,
+      "community": 4,
       "norm_label": "parse_csv_bytes()"
     },
     {
@@ -63,7 +63,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L45",
       "id": "ingestion_normalize_row",
-      "community": 3,
+      "community": 4,
       "norm_label": "normalize_row()"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L71",
       "id": "ingestion_create_rule_alerts",
-      "community": 3,
+      "community": 4,
       "norm_label": "create_rule_alerts()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L141",
       "id": "ingestion_parse_int",
-      "community": 3,
+      "community": 4,
       "norm_label": "_parse_int()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L150",
       "id": "ingestion_parse_float",
-      "community": 3,
+      "community": 4,
       "norm_label": "_parse_float()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "backend/app/ingestion.py",
       "source_location": "L159",
       "id": "ingestion_parse_datetime",
-      "community": 3,
+      "community": 4,
       "norm_label": "_parse_datetime()"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L1",
       "id": "backend_app_models_py",
-      "community": 4,
+      "community": 3,
       "norm_label": "models.py"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L7",
       "id": "models_base",
-      "community": 4,
+      "community": 3,
       "norm_label": "base"
     },
     {
@@ -126,7 +126,7 @@
       "source_file": "",
       "source_location": "",
       "id": "declarativebase",
-      "community": 4,
+      "community": 3,
       "norm_label": "declarativebase"
     },
     {
@@ -135,7 +135,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L11",
       "id": "models_ingestionjob",
-      "community": 4,
+      "community": 3,
       "norm_label": "ingestionjob"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "backend/app/models.py",
       "source_location": "L25",
       "id": "models_event",
-      "community": 4,
+      "community": 3,
       "norm_label": "event"
     },
     {
@@ -153,8 +153,26 @@
       "source_file": "backend/app/models.py",
       "source_location": "L50",
       "id": "models_alert",
-      "community": 4,
+      "community": 3,
       "norm_label": "alert"
+    },
+    {
+      "label": "AdminUser",
+      "file_type": "code",
+      "source_file": "backend/app/models.py",
+      "source_location": "L64",
+      "id": "models_adminuser",
+      "community": 3,
+      "norm_label": "adminuser"
+    },
+    {
+      "label": "AdminAuditLog",
+      "file_type": "code",
+      "source_file": "backend/app/models.py",
+      "source_location": "L73",
+      "id": "models_adminauditlog",
+      "community": 3,
+      "norm_label": "adminauditlog"
     },
     {
       "label": "schemas.py",
@@ -238,12 +256,93 @@
       "norm_label": "mldetectionresponse"
     },
     {
+      "label": "LoginRequest",
+      "file_type": "code",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L82",
+      "id": "schemas_loginrequest",
+      "community": 1,
+      "norm_label": "loginrequest"
+    },
+    {
+      "label": "LoginResponse",
+      "file_type": "code",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L87",
+      "id": "schemas_loginresponse",
+      "community": 1,
+      "norm_label": "loginresponse"
+    },
+    {
+      "label": "auth.py",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L1",
+      "id": "backend_app_auth_py",
+      "community": 5,
+      "norm_label": "auth.py"
+    },
+    {
+      "label": "hash_password()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L11",
+      "id": "auth_hash_password",
+      "community": 5,
+      "norm_label": "hash_password()"
+    },
+    {
+      "label": "verify_password()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L17",
+      "id": "auth_verify_password",
+      "community": 5,
+      "norm_label": "verify_password()"
+    },
+    {
+      "label": "_urlsafe_b64()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L29",
+      "id": "auth_urlsafe_b64",
+      "community": 5,
+      "norm_label": "_urlsafe_b64()"
+    },
+    {
+      "label": "_urlsafe_b64_decode()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L33",
+      "id": "auth_urlsafe_b64_decode",
+      "community": 5,
+      "norm_label": "_urlsafe_b64_decode()"
+    },
+    {
+      "label": "create_access_token()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L38",
+      "id": "auth_create_access_token",
+      "community": 5,
+      "norm_label": "create_access_token()"
+    },
+    {
+      "label": "verify_access_token()",
+      "file_type": "code",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L47",
+      "id": "auth_verify_access_token",
+      "community": 5,
+      "norm_label": "verify_access_token()"
+    },
+    {
       "label": "ml.py",
       "file_type": "code",
       "source_file": "backend/app/ml.py",
       "source_location": "L1",
       "id": "backend_app_ml_py",
-      "community": 8,
+      "community": 9,
       "norm_label": "ml.py"
     },
     {
@@ -252,7 +351,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L11",
       "id": "ml_run_isolation_forest_detection",
-      "community": 8,
+      "community": 9,
       "norm_label": "run_isolation_forest_detection()"
     },
     {
@@ -261,7 +360,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L107",
       "id": "ml_create_combined_risk_alerts",
-      "community": 8,
+      "community": 9,
       "norm_label": "_create_combined_risk_alerts()"
     },
     {
@@ -270,7 +369,7 @@
       "source_file": "backend/app/ml.py",
       "source_location": "L159",
       "id": "ml_score_to_severity",
-      "community": 8,
+      "community": 9,
       "norm_label": "_score_to_severity()"
     },
     {
@@ -279,52 +378,61 @@
       "source_file": "backend/app/db.py",
       "source_location": "L1",
       "id": "backend_app_db_py",
-      "community": 5,
+      "community": 6,
       "norm_label": "db.py"
     },
     {
       "label": "init_database()",
       "file_type": "code",
       "source_file": "backend/app/db.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "id": "db_init_database",
-      "community": 5,
+      "community": 6,
       "norm_label": "init_database()"
     },
     {
       "label": "_ensure_sqlite_ingestion_error_message_column()",
       "file_type": "code",
       "source_file": "backend/app/db.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "id": "db_ensure_sqlite_ingestion_error_message_column",
-      "community": 5,
+      "community": 6,
       "norm_label": "_ensure_sqlite_ingestion_error_message_column()"
     },
     {
       "label": "_ensure_sqlite_event_ml_columns()",
       "file_type": "code",
       "source_file": "backend/app/db.py",
-      "source_location": "L32",
+      "source_location": "L34",
       "id": "db_ensure_sqlite_event_ml_columns",
-      "community": 5,
+      "community": 6,
       "norm_label": "_ensure_sqlite_event_ml_columns()"
     },
     {
       "label": "check_database()",
       "file_type": "code",
       "source_file": "backend/app/db.py",
-      "source_location": "L44",
+      "source_location": "L46",
       "id": "db_check_database",
-      "community": 5,
+      "community": 6,
       "norm_label": "check_database()"
+    },
+    {
+      "label": "_ensure_default_admin_user()",
+      "file_type": "code",
+      "source_file": "backend/app/db.py",
+      "source_location": "L52",
+      "id": "db_ensure_default_admin_user",
+      "community": 6,
+      "norm_label": "_ensure_default_admin_user()"
     },
     {
       "label": "get_db()",
       "file_type": "code",
       "source_file": "backend/app/db.py",
-      "source_location": "L50",
+      "source_location": "L66",
       "id": "db_get_db",
-      "community": 5,
+      "community": 6,
       "norm_label": "get_db()"
     },
     {
@@ -333,7 +441,7 @@
       "source_file": "backend/app/__init__.py",
       "source_location": "L1",
       "id": "backend_app_init_py",
-      "community": 10,
+      "community": 11,
       "norm_label": "__init__.py"
     },
     {
@@ -346,19 +454,46 @@
       "norm_label": "main.py"
     },
     {
+      "label": "_create_audit_log()",
+      "file_type": "code",
+      "source_file": "backend/app/main.py",
+      "source_location": "L43",
+      "id": "main_create_audit_log",
+      "community": 2,
+      "norm_label": "_create_audit_log()"
+    },
+    {
+      "label": "get_current_admin_username()",
+      "file_type": "code",
+      "source_file": "backend/app/main.py",
+      "source_location": "L47",
+      "id": "main_get_current_admin_username",
+      "community": 2,
+      "norm_label": "get_current_admin_username()"
+    },
+    {
       "label": "healthcheck()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L28",
+      "source_location": "L59",
       "id": "main_healthcheck",
       "community": 2,
       "norm_label": "healthcheck()"
     },
     {
+      "label": "login()",
+      "file_type": "code",
+      "source_file": "backend/app/main.py",
+      "source_location": "L70",
+      "id": "main_login",
+      "community": 2,
+      "norm_label": "login()"
+    },
+    {
       "label": "ingest_csv()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L39",
+      "source_location": "L80",
       "id": "main_ingest_csv",
       "community": 2,
       "norm_label": "ingest_csv()"
@@ -367,7 +502,7 @@
       "label": "list_events()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L97",
+      "source_location": "L145",
       "id": "main_list_events",
       "community": 2,
       "norm_label": "list_events()"
@@ -376,7 +511,7 @@
       "label": "list_alerts()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L112",
+      "source_location": "L161",
       "id": "main_list_alerts",
       "community": 2,
       "norm_label": "list_alerts()"
@@ -385,7 +520,7 @@
       "label": "list_user_risks()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L141",
+      "source_location": "L191",
       "id": "main_list_user_risks",
       "community": 2,
       "norm_label": "list_user_risks()"
@@ -394,7 +529,7 @@
       "label": "dashboard_overview()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L195",
+      "source_location": "L246",
       "id": "main_dashboard_overview",
       "community": 2,
       "norm_label": "dashboard_overview()"
@@ -403,7 +538,7 @@
       "label": "run_ml_detection()",
       "file_type": "code",
       "source_file": "backend/app/main.py",
-      "source_location": "L213",
+      "source_location": "L267",
       "id": "main_run_ml_detection",
       "community": 2,
       "norm_label": "run_ml_detection()"
@@ -414,7 +549,7 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L1",
       "id": "backend_tests_conftest_py",
-      "community": 9,
+      "community": 10,
       "norm_label": "conftest.py"
     },
     {
@@ -423,7 +558,7 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L17",
       "id": "conftest_reset_database",
-      "community": 9,
+      "community": 10,
       "norm_label": "reset_database()"
     },
     {
@@ -432,8 +567,17 @@
       "source_file": "backend/tests/conftest.py",
       "source_location": "L23",
       "id": "conftest_client",
-      "community": 9,
+      "community": 10,
       "norm_label": "client()"
+    },
+    {
+      "label": "auth_headers()",
+      "file_type": "code",
+      "source_file": "backend/tests/conftest.py",
+      "source_location": "L32",
+      "id": "conftest_auth_headers",
+      "community": 10,
+      "norm_label": "auth_headers()"
     },
     {
       "label": "test_health.py",
@@ -457,7 +601,7 @@
       "label": "test_csv_ingestion_and_event_listing()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "id": "test_health_test_csv_ingestion_and_event_listing",
       "community": 0,
       "norm_label": "test_csv_ingestion_and_event_listing()"
@@ -466,7 +610,7 @@
       "label": "test_rule_engine_flags_new_ip_for_established_account()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L40",
+      "source_location": "L41",
       "id": "test_health_test_rule_engine_flags_new_ip_for_established_account",
       "community": 0,
       "norm_label": "test_rule_engine_flags_new_ip_for_established_account()"
@@ -475,7 +619,7 @@
       "label": "test_user_risk_summary_ranks_accounts_by_alert_score()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "id": "test_health_test_user_risk_summary_ranks_accounts_by_alert_score",
       "community": 0,
       "norm_label": "test_user_risk_summary_ranks_accounts_by_alert_score()"
@@ -484,7 +628,7 @@
       "label": "test_dashboard_overview_returns_security_summary_counts()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L90",
+      "source_location": "L91",
       "id": "test_health_test_dashboard_overview_returns_security_summary_counts",
       "community": 0,
       "norm_label": "test_dashboard_overview_returns_security_summary_counts()"
@@ -493,16 +637,34 @@
       "label": "test_healthcheck()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L119",
+      "source_location": "L120",
       "id": "test_health_test_healthcheck",
       "community": 0,
       "norm_label": "test_healthcheck()"
     },
     {
+      "label": "test_login_success_returns_bearer_token()",
+      "file_type": "code",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L128",
+      "id": "test_health_test_login_success_returns_bearer_token",
+      "community": 0,
+      "norm_label": "test_login_success_returns_bearer_token()"
+    },
+    {
+      "label": "test_protected_endpoint_requires_authentication()",
+      "file_type": "code",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L137",
+      "id": "test_health_test_protected_endpoint_requires_authentication",
+      "community": 0,
+      "norm_label": "test_protected_endpoint_requires_authentication()"
+    },
+    {
       "label": "test_csv_ingestion_marks_job_failed_for_invalid_port()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L127",
+      "source_location": "L142",
       "id": "test_health_test_csv_ingestion_marks_job_failed_for_invalid_port",
       "community": 0,
       "norm_label": "test_csv_ingestion_marks_job_failed_for_invalid_port()"
@@ -511,7 +673,7 @@
       "label": "test_csv_ingestion_rejects_missing_required_columns()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L147",
+      "source_location": "L162",
       "id": "test_health_test_csv_ingestion_rejects_missing_required_columns",
       "community": 0,
       "norm_label": "test_csv_ingestion_rejects_missing_required_columns()"
@@ -520,7 +682,7 @@
       "label": "test_isolation_forest_detection_scores_events_and_creates_ml_alerts()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L166",
+      "source_location": "L181",
       "id": "test_health_test_isolation_forest_detection_scores_events_and_creates_ml_alerts",
       "community": 0,
       "norm_label": "test_isolation_forest_detection_scores_events_and_creates_ml_alerts()"
@@ -529,7 +691,7 @@
       "label": "test_isolation_forest_detection_is_idempotent_for_alert_creation()",
       "file_type": "code",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L202",
+      "source_location": "L219",
       "id": "test_health_test_isolation_forest_detection_is_idempotent_for_alert_creation",
       "community": 0,
       "norm_label": "test_isolation_forest_detection_is_idempotent_for_alert_creation()"
@@ -540,7 +702,7 @@
       "source_file": "frontend/vite.config.ts",
       "source_location": "L1",
       "id": "frontend_vite_config_ts",
-      "community": 11,
+      "community": 12,
       "norm_label": "vite.config.ts"
     },
     {
@@ -549,7 +711,7 @@
       "source_file": "frontend/eslint.config.js",
       "source_location": "L1",
       "id": "frontend_eslint_config_js",
-      "community": 12,
+      "community": 13,
       "norm_label": "eslint.config.js"
     },
     {
@@ -558,43 +720,52 @@
       "source_file": "frontend/src/App.tsx",
       "source_location": "L1",
       "id": "frontend_src_app_tsx",
-      "community": 6,
+      "community": 7,
       "norm_label": "app.tsx"
+    },
+    {
+      "label": "getAuthHeaders()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L79",
+      "id": "app_getauthheaders",
+      "community": 7,
+      "norm_label": "getauthheaders()"
     },
     {
       "label": "fetchHealth()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L77",
+      "source_location": "L83",
       "id": "app_fetchhealth",
-      "community": 6,
+      "community": 7,
       "norm_label": "fetchhealth()"
     },
     {
       "label": "refreshData()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L86",
+      "source_location": "L92",
       "id": "app_refreshdata",
-      "community": 6,
+      "community": 7,
       "norm_label": "refreshdata()"
     },
     {
       "label": "onUpload()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L103",
+      "source_location": "L115",
       "id": "app_onupload",
-      "community": 6,
+      "community": 7,
       "norm_label": "onupload()"
     },
     {
       "label": "onLoginSubmit()",
       "file_type": "code",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L156",
+      "source_location": "L176",
       "id": "app_onloginsubmit",
-      "community": 6,
+      "community": 7,
       "norm_label": "onloginsubmit()"
     },
     {
@@ -603,7 +774,7 @@
       "source_file": "frontend/src/main.tsx",
       "source_location": "L1",
       "id": "frontend_src_main_tsx",
-      "community": 6,
+      "community": 7,
       "norm_label": "main.tsx"
     }
   ],
@@ -624,7 +795,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/config.py",
-      "source_location": "L19",
+      "source_location": "L23",
       "weight": 1.0,
       "_src": "backend_app_config_py",
       "_tgt": "config_get_settings",
@@ -648,7 +819,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/config.py",
-      "source_location": "L20",
+      "source_location": "L24",
       "weight": 1.0,
       "_src": "config_get_settings",
       "_tgt": "config_settings",
@@ -813,6 +984,30 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/models.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "backend_app_models_py",
+      "_tgt": "models_adminuser",
+      "source": "backend_app_models_py",
+      "target": "models_adminuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/models.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_src": "backend_app_models_py",
+      "_tgt": "models_adminauditlog",
+      "source": "backend_app_models_py",
+      "target": "models_adminauditlog",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/models.py",
@@ -858,6 +1053,30 @@
       "_tgt": "models_base",
       "source": "models_base",
       "target": "models_alert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/models.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_src": "models_adminuser",
+      "_tgt": "models_base",
+      "source": "models_base",
+      "target": "models_adminuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/models.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "_src": "models_adminauditlog",
+      "_tgt": "models_base",
+      "source": "models_base",
+      "target": "models_adminauditlog",
       "confidence_score": 1.0
     },
     {
@@ -945,6 +1164,30 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_src": "backend_app_schemas_py",
+      "_tgt": "schemas_loginrequest",
+      "source": "backend_app_schemas_py",
+      "target": "schemas_loginrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "backend_app_schemas_py",
+      "_tgt": "schemas_loginresponse",
+      "source": "backend_app_schemas_py",
+      "target": "schemas_loginresponse",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/schemas.py",
@@ -1029,6 +1272,126 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_src": "schemas_loginrequest",
+      "_tgt": "basemodel",
+      "source": "basemodel",
+      "target": "schemas_loginrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/schemas.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_src": "schemas_loginresponse",
+      "_tgt": "basemodel",
+      "source": "basemodel",
+      "target": "schemas_loginresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_hash_password",
+      "source": "backend_app_auth_py",
+      "target": "auth_hash_password",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L17",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_verify_password",
+      "source": "backend_app_auth_py",
+      "target": "auth_verify_password",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_urlsafe_b64",
+      "source": "backend_app_auth_py",
+      "target": "auth_urlsafe_b64",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_urlsafe_b64_decode",
+      "source": "backend_app_auth_py",
+      "target": "auth_urlsafe_b64_decode",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_create_access_token",
+      "source": "backend_app_auth_py",
+      "target": "auth_create_access_token",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "backend_app_auth_py",
+      "_tgt": "auth_verify_access_token",
+      "source": "backend_app_auth_py",
+      "target": "auth_verify_access_token",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L44",
+      "weight": 1.0,
+      "_src": "auth_create_access_token",
+      "_tgt": "auth_urlsafe_b64",
+      "source": "auth_urlsafe_b64",
+      "target": "auth_create_access_token",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/auth.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_src": "auth_verify_access_token",
+      "_tgt": "auth_urlsafe_b64_decode",
+      "source": "auth_urlsafe_b64_decode",
+      "target": "auth_verify_access_token",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/ml.py",
@@ -1092,7 +1455,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "_src": "backend_app_db_py",
       "_tgt": "db_init_database",
@@ -1104,7 +1467,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 1.0,
       "_src": "backend_app_db_py",
       "_tgt": "db_ensure_sqlite_ingestion_error_message_column",
@@ -1116,7 +1479,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L32",
+      "source_location": "L34",
       "weight": 1.0,
       "_src": "backend_app_db_py",
       "_tgt": "db_ensure_sqlite_event_ml_columns",
@@ -1128,7 +1491,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L44",
+      "source_location": "L46",
       "weight": 1.0,
       "_src": "backend_app_db_py",
       "_tgt": "db_check_database",
@@ -1140,7 +1503,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L50",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_src": "backend_app_db_py",
+      "_tgt": "db_ensure_default_admin_user",
+      "source": "backend_app_db_py",
+      "target": "db_ensure_default_admin_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/db.py",
+      "source_location": "L66",
       "weight": 1.0,
       "_src": "backend_app_db_py",
       "_tgt": "db_get_db",
@@ -1152,7 +1527,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0,
       "_src": "db_init_database",
       "_tgt": "db_ensure_sqlite_ingestion_error_message_column",
@@ -1164,7 +1539,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/db.py",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0,
       "_src": "db_init_database",
       "_tgt": "db_ensure_sqlite_event_ml_columns",
@@ -1173,10 +1548,46 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/db.py",
+      "source_location": "L19",
+      "weight": 1.0,
+      "_src": "db_init_database",
+      "_tgt": "db_ensure_default_admin_user",
+      "source": "db_init_database",
+      "target": "db_ensure_default_admin_user",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L28",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_src": "backend_app_main_py",
+      "_tgt": "main_create_audit_log",
+      "source": "backend_app_main_py",
+      "target": "main_create_audit_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_src": "backend_app_main_py",
+      "_tgt": "main_get_current_admin_username",
+      "source": "backend_app_main_py",
+      "target": "main_get_current_admin_username",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L59",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_healthcheck",
@@ -1188,7 +1599,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L39",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_src": "backend_app_main_py",
+      "_tgt": "main_login",
+      "source": "backend_app_main_py",
+      "target": "main_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L80",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_ingest_csv",
@@ -1200,7 +1623,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L97",
+      "source_location": "L145",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_events",
@@ -1212,7 +1635,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L112",
+      "source_location": "L161",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_alerts",
@@ -1224,7 +1647,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L141",
+      "source_location": "L191",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_list_user_risks",
@@ -1236,7 +1659,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L195",
+      "source_location": "L246",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_dashboard_overview",
@@ -1248,11 +1671,47 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/main.py",
-      "source_location": "L213",
+      "source_location": "L267",
       "weight": 1.0,
       "_src": "backend_app_main_py",
       "_tgt": "main_run_ml_detection",
       "source": "backend_app_main_py",
+      "target": "main_run_ml_detection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_src": "main_login",
+      "_tgt": "main_create_audit_log",
+      "source": "main_create_audit_log",
+      "target": "main_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_src": "main_ingest_csv",
+      "_tgt": "main_create_audit_log",
+      "source": "main_create_audit_log",
+      "target": "main_ingest_csv",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/main.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "_src": "main_run_ml_detection",
+      "_tgt": "main_create_audit_log",
+      "source": "main_create_audit_log",
       "target": "main_run_ml_detection",
       "confidence_score": 1.0
     },
@@ -1283,6 +1742,18 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "backend/tests/conftest.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "_src": "backend_tests_conftest_py",
+      "_tgt": "conftest_auth_headers",
+      "source": "backend_tests_conftest_py",
+      "target": "conftest_auth_headers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
       "source_location": "L7",
       "weight": 1.0,
@@ -1296,7 +1767,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_csv_ingestion_and_event_listing",
@@ -1308,7 +1779,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_rule_engine_flags_new_ip_for_established_account",
@@ -1320,7 +1791,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L64",
+      "source_location": "L65",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_user_risk_summary_ranks_accounts_by_alert_score",
@@ -1332,7 +1803,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L90",
+      "source_location": "L91",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_dashboard_overview_returns_security_summary_counts",
@@ -1344,7 +1815,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L119",
+      "source_location": "L120",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_healthcheck",
@@ -1356,7 +1827,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L127",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "backend_tests_test_health_py",
+      "_tgt": "test_health_test_login_success_returns_bearer_token",
+      "source": "backend_tests_test_health_py",
+      "target": "test_health_test_login_success_returns_bearer_token",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_src": "backend_tests_test_health_py",
+      "_tgt": "test_health_test_protected_endpoint_requires_authentication",
+      "source": "backend_tests_test_health_py",
+      "target": "test_health_test_protected_endpoint_requires_authentication",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/tests/test_health.py",
+      "source_location": "L142",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_csv_ingestion_marks_job_failed_for_invalid_port",
@@ -1368,7 +1863,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L147",
+      "source_location": "L162",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_csv_ingestion_rejects_missing_required_columns",
@@ -1380,7 +1875,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L166",
+      "source_location": "L181",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_isolation_forest_detection_scores_events_and_creates_ml_alerts",
@@ -1392,7 +1887,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L202",
+      "source_location": "L219",
       "weight": 1.0,
       "_src": "backend_tests_test_health_py",
       "_tgt": "test_health_test_isolation_forest_detection_is_idempotent_for_alert_creation",
@@ -1404,7 +1899,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "_src": "test_health_test_csv_ingestion_and_event_listing",
       "_tgt": "test_health_upload_csv",
@@ -1416,7 +1911,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L49",
+      "source_location": "L50",
       "weight": 1.0,
       "_src": "test_health_test_rule_engine_flags_new_ip_for_established_account",
       "_tgt": "test_health_upload_csv",
@@ -1428,7 +1923,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L74",
+      "source_location": "L75",
       "weight": 1.0,
       "_src": "test_health_test_user_risk_summary_ranks_accounts_by_alert_score",
       "_tgt": "test_health_upload_csv",
@@ -1440,7 +1935,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L100",
+      "source_location": "L101",
       "weight": 1.0,
       "_src": "test_health_test_dashboard_overview_returns_security_summary_counts",
       "_tgt": "test_health_upload_csv",
@@ -1452,7 +1947,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L133",
+      "source_location": "L148",
       "weight": 1.0,
       "_src": "test_health_test_csv_ingestion_marks_job_failed_for_invalid_port",
       "_tgt": "test_health_upload_csv",
@@ -1464,7 +1959,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L153",
+      "source_location": "L168",
       "weight": 1.0,
       "_src": "test_health_test_csv_ingestion_rejects_missing_required_columns",
       "_tgt": "test_health_upload_csv",
@@ -1476,7 +1971,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L176",
+      "source_location": "L193",
       "weight": 1.0,
       "_src": "test_health_test_isolation_forest_detection_scores_events_and_creates_ml_alerts",
       "_tgt": "test_health_upload_csv",
@@ -1488,7 +1983,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_health.py",
-      "source_location": "L210",
+      "source_location": "L229",
       "weight": 1.0,
       "_src": "test_health_test_isolation_forest_detection_is_idempotent_for_alert_creation",
       "_tgt": "test_health_upload_csv",
@@ -1500,7 +1995,19 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L77",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_src": "frontend_src_app_tsx",
+      "_tgt": "app_getauthheaders",
+      "source": "frontend_src_app_tsx",
+      "target": "app_getauthheaders",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L83",
       "weight": 1.0,
       "_src": "frontend_src_app_tsx",
       "_tgt": "app_fetchhealth",
@@ -1512,7 +2019,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L86",
+      "source_location": "L92",
       "weight": 1.0,
       "_src": "frontend_src_app_tsx",
       "_tgt": "app_refreshdata",
@@ -1524,7 +2031,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L103",
+      "source_location": "L115",
       "weight": 1.0,
       "_src": "frontend_src_app_tsx",
       "_tgt": "app_onupload",
@@ -1536,7 +2043,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L156",
+      "source_location": "L176",
       "weight": 1.0,
       "_src": "frontend_src_app_tsx",
       "_tgt": "app_onloginsubmit",
@@ -1560,7 +2067,31 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "frontend/src/App.tsx",
-      "source_location": "L115",
+      "source_location": "L94",
+      "weight": 1.0,
+      "_src": "app_refreshdata",
+      "_tgt": "app_getauthheaders",
+      "source": "app_getauthheaders",
+      "target": "app_refreshdata",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L128",
+      "weight": 1.0,
+      "_src": "app_onupload",
+      "_tgt": "app_getauthheaders",
+      "source": "app_getauthheaders",
+      "target": "app_onupload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.tsx",
+      "source_location": "L135",
       "weight": 1.0,
       "_src": "app_onupload",
       "_tgt": "app_refreshdata",
