@@ -48,6 +48,7 @@ class AlertResponse(BaseModel):
     event_id: int
     rule_name: str
     severity: str
+    triage_status: str
     risk_score: int
     reason_codes: list[str]
     created_at: datetime
@@ -97,3 +98,39 @@ class AdminAuditLogResponse(BaseModel):
     action: str
     details: str | None
     created_at: datetime
+
+
+class EventAlertDetail(BaseModel):
+    rule_name: str
+    severity: str
+    risk_score: int
+    reason_codes: list[str]
+    created_at: datetime
+
+
+class EventExplanationResponse(BaseModel):
+    event_id: int
+    account: str | None
+    source_ip: str | None
+    occurred_at: datetime | None
+    ml_anomaly_score: float | None
+    ml_is_anomaly: int | None
+    max_rule_score: int
+    ml_score_100: int
+    ml_bonus: int
+    combined_score: int
+    combined_severity: str
+    alerts: list[EventAlertDetail]
+
+
+class DetectionEvaluationResponse(BaseModel):
+    total_events: int
+    total_alerts: int
+    alerts_per_1000_events: float
+    severity_breakdown: dict[str, int]
+    top_reason_codes: list[dict[str, str | int]]
+    top_risky_accounts: list[dict[str, str | int]]
+
+
+class AlertStatusUpdateRequest(BaseModel):
+    triage_status: str

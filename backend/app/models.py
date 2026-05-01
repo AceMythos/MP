@@ -54,6 +54,7 @@ class Alert(Base):
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"), index=True)
     rule_name: Mapped[str] = mapped_column(String(100))
     severity: Mapped[str] = mapped_column(String(20))
+    triage_status: Mapped[str] = mapped_column(String(30), default="open")
     risk_score: Mapped[int] = mapped_column(Integer)
     reason_codes: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

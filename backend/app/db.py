@@ -16,6 +16,7 @@ def init_database() -> None:
     Base.metadata.create_all(bind=engine)
     _ensure_sqlite_ingestion_error_message_column()
     _ensure_sqlite_event_ml_columns()
+    _ensure_sqlite_alert_triage_status_column()
     _ensure_default_admin_user()
 
 
@@ -41,6 +42,16 @@ def _ensure_sqlite_event_ml_columns() -> None:
             connection.execute(text("ALTER TABLE events ADD COLUMN ml_anomaly_score FLOAT"))
         if "ml_is_anomaly" not in columns:
             connection.execute(text("ALTER TABLE events ADD COLUMN ml_is_anomaly INTEGER"))
+
+
+def _ensure_sqlite_alert_triage_status_column() -> None:
+    if not settings.database_url.startswith("sqlite"):
+        return
+
+    with engine.begin() as connection:
+        columns = {row[1] for row in connection.execute(text("PRAGMA table_info('alerts')")).fetchall()}
+        if "triage_status" not in columns:
+            connection.execute(text("ALTER TABLE alerts ADD COLUMN triage_status VARCHAR(30) DEFAULT 'open'"))
 
 
 def check_database() -> bool:

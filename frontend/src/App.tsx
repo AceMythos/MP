@@ -11,14 +11,24 @@ type DashboardOverview = {
   severity_breakdown: Record<string, number>
 }
 
+type EvaluationMetrics = {
+  total_events: number
+  total_alerts: number
+  alerts_per_1000_events: number
+  severity_breakdown: Record<string, number>
+  top_reason_codes: Array<{ reason_code: string; count: number }>
+  top_risky_accounts: Array<{ account: string; risk_score_sum: number }>
+}
+
 type AlertRow = {
   id: number
   rule_name: string
   severity: 'low' | 'medium' | 'high' | 'critical'
+  triage_status: 'open' | 'acknowledged' | 'in_progress' | 'escalated' | 'resolved'
   risk_score: number
   created_at: string
   reason_codes: string[]
-  event: { account: string | null; source_ip: string | null; url: string | null; occurred_at: string | null }
+  event: { id: number; account: string | null; source_ip: string | null; url: string | null; occurred_at: string | null }
 }
 
 type EventRow = {
@@ -50,6 +60,27 @@ type AuditLogRow = {
   created_at: string
 }
 
+type EventExplanation = {
+  event_id: number
+  account: string | null
+  source_ip: string | null
+  occurred_at: string | null
+  ml_anomaly_score: number | null
+  ml_is_anomaly: number | null
+  max_rule_score: number
+  ml_score_100: number
+  ml_bonus: number
+  combined_score: number
+  combined_severity: string
+  alerts: Array<{
+    rule_name: string
+    severity: string
+    risk_score: number
+    reason_codes: string[]
+    created_at: string
+  }>
+}
+
 const API_BASE = 'http://127.0.0.1:8000'
 const TABS: Array<{ key: TabKey; label: string }> = [
   { key: 'dashboard', label: 'Dashboard' },
@@ -72,11 +103,14 @@ function App() {
   const [events, setEvents] = useState<EventRow[]>([])
   const [users, setUsers] = useState<UserRisk[]>([])
   const [auditLogs, setAuditLogs] = useState<AuditLogRow[]>([])
+  const [evaluation, setEvaluation] = useState<EvaluationMetrics | null>(null)
   const [uploadStatus, setUploadStatus] = useState<string>('No file uploaded yet.')
   const [syntheticCount, setSyntheticCount] = useState(300)
   const [syntheticSeed, setSyntheticSeed] = useState('')
   const [uploading, setUploading] = useState(false)
   const [selectedAlert, setSelectedAlert] = useState<AlertRow | null>(null)
+  const [selectedExplanation, setSelectedExplanation] = useState<EventExplanation | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState(false)
   const [alertSeverityFilter, setAlertSeverityFilter] = useState<'all' | AlertRow['severity']>('all')
   const [alertQuery, setAlertQuery] = useState('')
   const [eventQuery, setEventQuery] = useState('')
@@ -183,6 +217,78 @@ function App() {
     }
   }
 
+  async function onRunMlDetection() {
+    if (!token) return
+    setUploadStatus('Running ML detection...')
+    try {
+      const res = await fetch(`${API_BASE}/detections/isolation-forest`, {
+        method: 'POST',
+        headers: getAuthHeaders(token),
+      })
+      const body = await res.json()
+      if (!res.ok) {
+        setUploadStatus(`ML detection failed: ${body.detail || 'Unknown error'}`)
+        return
+      }
+      setUploadStatus(
+        `ML detection complete. Processed ${body.processed_events}, anomalies ${body.anomaly_events}, new alerts ${body.alerts_created}`,
+      )
+      await refreshData(token)
+    } catch {
+      setUploadStatus('ML detection failed: backend unavailable.')
+    }
+  }
+
+  async function onEvaluateDetections() {
+    if (!token) return
+    try {
+      const res = await fetch(`${API_BASE}/detections/evaluate`, {
+        method: 'POST',
+        headers: getAuthHeaders(token),
+      })
+      if (!res.ok) return
+      setEvaluation((await res.json()) as EvaluationMetrics)
+    } catch {
+      // keep current state
+    }
+  }
+
+  async function onSelectAlert(alert: AlertRow) {
+    setSelectedAlert(alert)
+    setSelectedExplanation(null)
+    if (!token) return
+    try {
+      const res = await fetch(`${API_BASE}/events/${alert.event.id}/explanation`, {
+        headers: getAuthHeaders(token),
+      })
+      if (!res.ok) return
+      setSelectedExplanation((await res.json()) as EventExplanation)
+    } catch {
+      // keep current state
+    }
+  }
+
+  async function onUpdateAlertStatus(nextStatus: AlertRow['triage_status']) {
+    if (!token || !selectedAlert) return
+    setUpdatingStatus(true)
+    try {
+      const res = await fetch(`${API_BASE}/alerts/${selectedAlert.id}/status`, {
+        method: 'PATCH',
+        headers: {
+          ...getAuthHeaders(token),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ triage_status: nextStatus }),
+      })
+      if (!res.ok) return
+      const updated = (await res.json()) as AlertRow
+      setSelectedAlert(updated)
+      await refreshData(token)
+    } finally {
+      setUpdatingStatus(false)
+    }
+  }
+
   const topUsers = useMemo(() => users.slice(0, 5), [users])
   const recentAlerts = useMemo(() => alerts.slice(0, 6), [alerts])
   const severity = overview?.severity_breakdown ?? { low: 0, medium: 0, high: 0, critical: 0 }
@@ -265,11 +371,11 @@ function App() {
       <header className="globalbar">
         <div className="global-brand">AEGIS SOC</div>
         <nav className="global-nav">
-          <button className="global-link">Search</button>
-          <button className="global-link">Analytics</button>
-          <button className="global-link">Reports</button>
-          <button className="global-link">Alerts</button>
-          <button className="global-link">Dashboards</button>
+          <button className="global-link" onClick={() => setActiveTab('events')}>Search</button>
+          <button className="global-link" onClick={() => setActiveTab('dashboard')}>Analytics</button>
+          <button className="global-link" onClick={() => setActiveTab('audit')}>Reports</button>
+          <button className="global-link" onClick={() => setActiveTab('alerts')}>Alerts</button>
+          <button className="global-link" onClick={() => setActiveTab('dashboard')}>Dashboards</button>
         </nav>
         <div className="global-tools">
           <button className="ghost-btn" onClick={() => token && void refreshData(token)}>Refresh</button>
@@ -320,6 +426,8 @@ function App() {
               <div className="hero-meta">
                 <span>Rules + Isolation Forest</span>
                 <span>Local Mode</span>
+                <button className="ghost-btn" onClick={() => void onRunMlDetection()}>Run ML Detection</button>
+                <button className="ghost-btn" onClick={() => void onEvaluateDetections()}>Evaluate</button>
               </div>
             </div>
             <div className="kpi"><span>Total Events</span><strong>{overview?.total_events ?? 0}</strong></div>
@@ -344,8 +452,17 @@ function App() {
             <div className="card">
               <h2>Recent Alerts</h2>
               {recentAlerts.map((a) => (
-                <div key={a.id} className="row"><span>{a.event.account ?? 'unknown'}</span><strong>{a.severity}</strong></div>
+                <div key={a.id} className="row">
+                  <span>{a.event.account ?? 'unknown'} · {new Date(a.created_at).toLocaleString()}</span>
+                  <strong>{a.severity}</strong>
+                </div>
               ))}
+            </div>
+            <div className="card wide">
+              <h2>Detection Quality</h2>
+              <div className="row"><span>Alerts / 1000 events</span><strong>{evaluation?.alerts_per_1000_events ?? '-'}</strong></div>
+              <div className="row"><span>Total alerts</span><strong>{evaluation?.total_alerts ?? '-'}</strong></div>
+              <div className="row"><span>Critical alerts</span><strong>{evaluation?.severity_breakdown?.critical ?? '-'}</strong></div>
             </div>
           </section>
         )}
@@ -380,6 +497,8 @@ function App() {
               <button className="login-btn" disabled={uploading} onClick={() => void onGenerateSynthetic()}>
                 {uploading ? 'Processing...' : 'Generate Synthetic Events'}
               </button>
+              <button className="ghost-btn" onClick={() => void onRunMlDetection()}>Run ML Detection</button>
+              <button className="ghost-btn" onClick={() => void onEvaluateDetections()}>Evaluate Quality</button>
             </div>
           </section>
         )}
@@ -409,11 +528,12 @@ function App() {
               />
             </div>
             <table>
-              <thead><tr><th>Severity</th><th>Risk</th><th>Rule</th><th>Account</th><th>IP</th><th>Time</th></tr></thead>
+              <thead><tr><th>Severity</th><th>Status</th><th>Risk</th><th>Rule</th><th>Account</th><th>IP</th><th>Time</th></tr></thead>
               <tbody>
                 {filteredAlerts.map((a) => (
-                  <tr key={a.id} onClick={() => setSelectedAlert(a)}>
+                  <tr key={a.id} onClick={() => void onSelectAlert(a)}>
                     <td><span className={`badge ${a.severity}`}>{a.severity}</span></td>
+                    <td><span className="badge">{a.triage_status.replace('_', ' ')}</span></td>
                     <td>{a.risk_score}</td>
                     <td>{a.rule_name}</td>
                     <td>{a.event.account ?? 'unknown'}</td>
@@ -491,9 +611,39 @@ function App() {
           <button className="close" onClick={() => setSelectedAlert(null)}>Close</button>
           <h3>Alert #{selectedAlert.id}</h3>
           <p><strong>Rule:</strong> {selectedAlert.rule_name}</p>
+          <p><strong>Status:</strong> {selectedAlert.triage_status.replace('_', ' ')}</p>
           <p><strong>Risk:</strong> {selectedAlert.risk_score}</p>
+          <p><strong>Created:</strong> {new Date(selectedAlert.created_at).toLocaleString()}</p>
           <p><strong>Reasons:</strong> {selectedAlert.reason_codes.join(', ')}</p>
           <p><strong>URL:</strong> {selectedAlert.event.url ?? '-'}</p>
+          <div className="chip-group">
+            {(['open', 'acknowledged', 'in_progress', 'escalated', 'resolved'] as const).map((state) => (
+              <button
+                key={state}
+                className={selectedAlert.triage_status === state ? 'chip active' : 'chip'}
+                disabled={updatingStatus}
+                onClick={() => void onUpdateAlertStatus(state)}
+              >
+                {state.replace('_', ' ')}
+              </button>
+            ))}
+          </div>
+          {selectedExplanation && (
+            <>
+              <hr />
+              <p><strong>Combined:</strong> {selectedExplanation.combined_score} ({selectedExplanation.combined_severity})</p>
+              <p><strong>Rule Component:</strong> {selectedExplanation.max_rule_score} * 0.6</p>
+              <p><strong>ML Component:</strong> {selectedExplanation.ml_score_100} * 0.4</p>
+              <p><strong>ML Bonus:</strong> {selectedExplanation.ml_bonus}</p>
+              <h4>Matched Signals</h4>
+              {selectedExplanation.alerts.map((detail, idx) => (
+                <div key={`${detail.rule_name}-${idx}`} className="row">
+                  <span>{detail.rule_name}</span>
+                  <strong>{detail.risk_score}</strong>
+                </div>
+              ))}
+            </>
+          )}
         </aside>
       )}
     </div>
