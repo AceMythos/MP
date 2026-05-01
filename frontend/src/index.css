@@ -9,7 +9,8 @@
   --line: #e0e0e0;
   --muted: #6e6e73;
   --danger: #b02a2a;
-  --font: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter Tight", "Inter", "Noto Sans", "Liberation Sans", "Segoe UI", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
 * {
@@ -22,6 +23,16 @@ body {
   color: var(--ink);
   background: var(--bg-soft);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-weight: 400;
+  letter-spacing: -0.08px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0;
 }
 
 #root {
@@ -143,7 +154,8 @@ input {
 
 .global-brand {
   font-size: 12px;
-  letter-spacing: -0.12px;
+  letter-spacing: -0.08px;
+  font-weight: 500;
 }
 
 .global-nav {
@@ -157,7 +169,8 @@ input {
   color: #fff;
   padding: 8px 12px;
   font-size: 12px;
-  letter-spacing: -0.12px;
+  letter-spacing: -0.08px;
+  font-weight: 450;
 }
 
 .global-tools {
@@ -218,16 +231,17 @@ input {
 
 .topbar h1 {
   margin: 0;
-  font-size: 56px;
-  line-height: 1.07;
-  letter-spacing: -0.28px;
+  font-size: 48px;
+  line-height: 1.08;
+  letter-spacing: -0.52px;
   font-weight: 600;
 }
 
 .topbar p {
   margin: 8px 0 0;
-  font-size: 21px;
+  font-size: 18px;
   color: var(--muted);
+  letter-spacing: -0.12px;
 }
 
 .section-tabs {
@@ -270,9 +284,10 @@ input {
 
 .hero-title {
   margin: 8px 0 0;
-  font-size: 40px;
+  font-size: 36px;
   line-height: 1.1;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.46px;
+  font-weight: 600;
 }
 
 .hero-meta {
@@ -339,9 +354,10 @@ input {
 
 .card h2 {
   margin: 0 0 16px;
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1.15;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.28px;
+  font-weight: 600;
 }
 
 .row {
@@ -350,7 +366,8 @@ input {
   gap: 12px;
   border-top: 1px solid var(--line);
   padding: 10px 0;
-  font-size: 17px;
+  font-size: 16px;
+  letter-spacing: -0.08px;
 }
 
 .severity-bars {
@@ -441,7 +458,8 @@ hr {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 15px;
+  letter-spacing: -0.08px;
 }
 
 thead th {
@@ -466,7 +484,8 @@ tbody tr:hover {
   padding: 4px 10px;
   border-radius: 9999px;
   background: #f2f2f4;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 600;
   text-transform: capitalize;
 }
 

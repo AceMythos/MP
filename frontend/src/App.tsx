@@ -417,7 +417,7 @@ function App() {
                     <td>{a.risk_score}</td>
                     <td>{a.rule_name}</td>
                     <td>{a.event.account ?? 'unknown'}</td>
-                    <td>{a.event.source_ip ?? '-'}</td>
+                    <td className="mono">{a.event.source_ip ?? '-'}</td>
                     <td>{new Date(a.created_at).toLocaleString()}</td>
                   </tr>
                 ))}
@@ -442,7 +442,7 @@ function App() {
               <tbody>
                 {filteredEvents.map((e) => (
                   <tr key={e.id}>
-                    <td>{e.account ?? 'unknown'}</td><td>{e.group_name ?? '-'}</td><td>{e.source_ip ?? '-'}</td><td>{e.url ?? '-'}</td><td>{e.port ?? '-'}</td><td>{e.vlan ?? '-'}</td>
+                    <td>{e.account ?? 'unknown'}</td><td>{e.group_name ?? '-'}</td><td className="mono">{e.source_ip ?? '-'}</td><td>{e.url ?? '-'}</td><td className="mono">{e.port ?? '-'}</td><td className="mono">{e.vlan ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -458,7 +458,7 @@ function App() {
               <tbody>
                 {users.map((u) => (
                   <tr key={u.account}>
-                    <td>{u.account}</td><td>{u.event_count}</td><td>{u.alert_count}</td><td>{u.max_risk_score}</td><td><span className={`badge ${u.max_severity}`}>{u.max_severity}</span></td>
+                    <td>{u.account}</td><td className="mono">{u.event_count}</td><td className="mono">{u.alert_count}</td><td className="mono">{u.max_risk_score}</td><td><span className={`badge ${u.max_severity}`}>{u.max_severity}</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -477,7 +477,7 @@ function App() {
                     <td>{new Date(log.created_at).toLocaleString()}</td>
                     <td>{log.admin_username}</td>
                     <td>{log.action}</td>
-                    <td>{log.details ?? '-'}</td>
+                    <td className="mono">{log.details ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>
